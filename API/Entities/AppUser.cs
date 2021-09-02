@@ -2,6 +2,7 @@ namespace API.Entities
 {
     public class AppUser
     {
+
         public int Id { get; set; }
 
         public string Username { get; set; }
@@ -9,5 +10,7 @@ namespace API.Entities
         public byte[] PasswordHash { get; set; }
         
         public byte[] PasswordSalt { get; set; }
+
+        public List<Saldo> Saldo { get; set; }
     }
 }

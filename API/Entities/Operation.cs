@@ -17,5 +17,10 @@ namespace API.Entities
         public string Description { get; set; }
 
         public int SaldoId { get; set; }
+
+        public Saldo Saldo { get; set; }
+
+        public Category Category  { get; set; }
+
     }
 }

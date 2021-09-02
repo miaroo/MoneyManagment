@@ -11,5 +11,9 @@ namespace API.Entities
         public int UserId { get; set; }
 
         public string OperationTypeId { get; set; }
+
+        public Operation Operation { get; set; }
+
+        public OperationType OperationType { get; set; }
     }
 }
