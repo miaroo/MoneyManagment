@@ -18,5 +18,7 @@ namespace API.Data
         public DbSet<OperationType> OperationType { get; set; }
         public DbSet<Saldo> Saldo { get; set; }
 
+
+
     }
 }
