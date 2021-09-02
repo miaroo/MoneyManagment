@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20210902132209_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20210902185459_Whyyyyyyyyy121")]
+    partial class Whyyyyyyyyy121
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -25,12 +25,16 @@ namespace API.Data.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<byte[]>("PasswordHash")
+                        .IsRequired()
                         .HasColumnType("BLOB");
 
                     b.Property<byte[]>("PasswordSalt")
+                        .IsRequired()
                         .HasColumnType("BLOB");
 
                     b.Property<string>("Username")
+                        .IsRequired()
+                        .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -48,9 +52,12 @@ namespace API.Data.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("OperationTypeId")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int?>("OperationTypeId1")
@@ -87,9 +94,13 @@ namespace API.Data.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("OperationName")
+                        .IsRequired()
+                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.Property<int>("SaldoId")
@@ -111,6 +122,7 @@ namespace API.Data.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -131,6 +143,7 @@ namespace API.Data.Migrations
                         .HasColumnType("REAL");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int>("UserId")

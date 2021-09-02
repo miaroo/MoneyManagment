@@ -4,11 +4,6 @@ namespace API.Entities
 {
     public class AppUser
     {
-        public IEnumerable<Saldo> Saldos { get; set; }
-
-        public IEnumerable<Category> Categories { get; set; }
-
-        
         public int Id { get; set; }
 
         [Required]
@@ -21,6 +16,9 @@ namespace API.Entities
         [Required]
         public byte[] PasswordSalt { get; set; }
 
+        public IEnumerable<Saldo> Saldos { get; set; }
+
+        public IEnumerable<Category> Categories { get; set; }
 
 
     }

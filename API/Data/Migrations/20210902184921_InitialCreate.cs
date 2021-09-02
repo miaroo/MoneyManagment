@@ -13,7 +13,7 @@ namespace API.Data.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT", nullable: true)
+                    Name = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -26,9 +26,9 @@ namespace API.Data.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Username = table.Column<string>(type: "TEXT", nullable: true),
-                    PasswordHash = table.Column<byte[]>(type: "BLOB", nullable: true),
-                    PasswordSalt = table.Column<byte[]>(type: "BLOB", nullable: true)
+                    Username = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
+                    PasswordHash = table.Column<byte[]>(type: "BLOB", nullable: false),
+                    PasswordSalt = table.Column<byte[]>(type: "BLOB", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -41,10 +41,10 @@ namespace API.Data.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT", nullable: true),
                     ParentCategoryId = table.Column<int>(type: "INTEGER", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
                     UserId = table.Column<int>(type: "INTEGER", nullable: false),
-                    OperationTypeId = table.Column<string>(type: "TEXT", nullable: true),
+                    OperationTypeId = table.Column<string>(type: "TEXT", nullable: false),
                     OperationTypeId1 = table.Column<int>(type: "INTEGER", nullable: true),
                     AppUserId = table.Column<int>(type: "INTEGER", nullable: true)
                 },
@@ -72,7 +72,7 @@ namespace API.Data.Migrations
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     UserId = table.Column<int>(type: "INTEGER", nullable: false),
-                    Name = table.Column<string>(type: "TEXT", nullable: true),
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
                     Money = table.Column<double>(type: "REAL", nullable: false),
                     AppUserId = table.Column<int>(type: "INTEGER", nullable: true)
                 },
@@ -93,11 +93,11 @@ namespace API.Data.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
+                    Description = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
                     Amount = table.Column<double>(type: "REAL", nullable: false),
                     Date = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    OperationName = table.Column<string>(type: "TEXT", nullable: true),
+                    OperationName = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
                     CategoryId = table.Column<int>(type: "INTEGER", nullable: false),
-                    Description = table.Column<string>(type: "TEXT", nullable: true),
                     SaldoId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>

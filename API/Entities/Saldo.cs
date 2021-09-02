@@ -5,13 +5,10 @@ namespace API.Entities
 {
     public class Saldo
     {
-        public IEnumerable<Operation> Operations { get; set; }
-        
-        [Required]
 
         public int Id { get; set; }
 
-        public int UserId { get; set; }
+        public int AppUserId { get; set; }
 
         [Required]
         public string Name { get; set; }
@@ -19,6 +16,8 @@ namespace API.Entities
         public double Money { get; set; }
 
         public AppUser AppUser { get; set; }
+
+        public IEnumerable<Operation> Operations { get; set; }
 
     }
 }

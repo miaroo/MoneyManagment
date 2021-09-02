@@ -3,14 +3,16 @@ using System;
 using API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace API.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20210902185103_Whyyyyyyyyy")]
+    partial class Whyyyyyyyyy
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -46,7 +48,7 @@ namespace API.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("AppUserId")
+                    b.Property<int?>("AppUserId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
@@ -54,19 +56,24 @@ namespace API.Data.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("OperationTypeId")
+                    b.Property<string>("OperationTypeId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("OperationTypeId1")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("ParentCategoryId")
+                    b.Property<int>("ParentCategoryId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("UserId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
                     b.HasIndex("AppUserId");
 
-                    b.HasIndex("OperationTypeId");
-
-                    b.HasIndex("ParentCategoryId");
+                    b.HasIndex("OperationTypeId1");
 
                     b.ToTable("Category");
                 });
@@ -129,7 +136,7 @@ namespace API.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("AppUserId")
+                    b.Property<int?>("AppUserId")
                         .HasColumnType("INTEGER");
 
                     b.Property<double>("Money")
@@ -138,6 +145,9 @@ namespace API.Data.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
@@ -150,39 +160,29 @@ namespace API.Data.Migrations
                 {
                     b.HasOne("API.Entities.AppUser", "AppUser")
                         .WithMany("Categories")
-                        .HasForeignKey("AppUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .HasForeignKey("AppUserId");
 
                     b.HasOne("API.Entities.OperationType", "OperationType")
                         .WithMany("Category")
-                        .HasForeignKey("OperationTypeId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("API.Entities.Category", "ParentCategory")
-                        .WithMany("ChildCategories")
-                        .HasForeignKey("ParentCategoryId");
+                        .HasForeignKey("OperationTypeId1");
 
                     b.Navigation("AppUser");
 
                     b.Navigation("OperationType");
-
-                    b.Navigation("ParentCategory");
                 });
 
             modelBuilder.Entity("API.Entities.Operation", b =>
                 {
                     b.HasOne("API.Entities.Category", "Category")
-                        .WithMany()
+                        .WithMany("Operation")
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("API.Entities.Saldo", "Saldo")
                         .WithMany("Operations")
                         .HasForeignKey("SaldoId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Category");
@@ -194,9 +194,7 @@ namespace API.Data.Migrations
                 {
                     b.HasOne("API.Entities.AppUser", "AppUser")
                         .WithMany("Saldos")
-                        .HasForeignKey("AppUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("AppUserId");
 
                     b.Navigation("AppUser");
                 });
@@ -210,7 +208,7 @@ namespace API.Data.Migrations
 
             modelBuilder.Entity("API.Entities.Category", b =>
                 {
-                    b.Navigation("ChildCategories");
+                    b.Navigation("Operation");
                 });
 
             modelBuilder.Entity("API.Entities.OperationType", b =>

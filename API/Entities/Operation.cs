@@ -5,6 +5,8 @@ namespace API.Entities
 {
     public class Operation
     {
+        public int Id { get; set; }
+
         [Required]
         [MaxLength(100)]
         public string Description { get; set; }
@@ -14,8 +16,6 @@ namespace API.Entities
 
         [Required]
         public DateTime Date { get; set; } = DateTime.Now;
-
-        public int Id { get; set; }
 
         [Required]
         [MaxLength(100)]

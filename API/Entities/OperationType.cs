@@ -6,13 +6,13 @@ namespace API.Entities
 {
     public class OperationType
     {
-        public IEnumerable<Category> Category { get; set; }
-        
-        [Required]
         public int Id { get; set; }
 
         [Required]
         public string Name { get; set; }
+
+        public IEnumerable<Category> Category { get; set; }
+
 
 
 
