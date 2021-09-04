@@ -61,7 +61,7 @@ namespace API.Data.Migrations
 
                     b.HasIndex("AppUserId");
 
-                    b.ToTable("BankAccount");
+                    b.ToTable("BankAccounts");
                 });
 
             modelBuilder.Entity("API.Entities.Category", b =>
@@ -92,7 +92,7 @@ namespace API.Data.Migrations
 
                     b.HasIndex("ParentCategoryId");
 
-                    b.ToTable("Category");
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("API.Entities.Operation", b =>
@@ -129,7 +129,7 @@ namespace API.Data.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Operation");
+                    b.ToTable("Operations");
                 });
 
             modelBuilder.Entity("API.Entities.OperationType", b =>
@@ -145,7 +145,7 @@ namespace API.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("OperationType");
+                    b.ToTable("OperationTypes");
                 });
 
             modelBuilder.Entity("API.Entities.BankAccount", b =>

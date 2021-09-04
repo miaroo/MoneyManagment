@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20210904131424_InitialCreate")]
+    [Migration("20210904153536_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -63,7 +63,7 @@ namespace API.Data.Migrations
 
                     b.HasIndex("AppUserId");
 
-                    b.ToTable("BankAccount");
+                    b.ToTable("BankAccounts");
                 });
 
             modelBuilder.Entity("API.Entities.Category", b =>
@@ -94,7 +94,7 @@ namespace API.Data.Migrations
 
                     b.HasIndex("ParentCategoryId");
 
-                    b.ToTable("Category");
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("API.Entities.Operation", b =>
@@ -131,7 +131,7 @@ namespace API.Data.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Operation");
+                    b.ToTable("Operations");
                 });
 
             modelBuilder.Entity("API.Entities.OperationType", b =>
@@ -147,7 +147,7 @@ namespace API.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("OperationType");
+                    b.ToTable("OperationTypes");
                 });
 
             modelBuilder.Entity("API.Entities.BankAccount", b =>

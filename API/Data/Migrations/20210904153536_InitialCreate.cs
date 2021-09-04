@@ -8,7 +8,7 @@ namespace API.Data.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "OperationType",
+                name: "OperationTypes",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
@@ -17,7 +17,7 @@ namespace API.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_OperationType", x => x.Id);
+                    table.PrimaryKey("PK_OperationTypes", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -36,7 +36,7 @@ namespace API.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "BankAccount",
+                name: "BankAccounts",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
@@ -47,9 +47,9 @@ namespace API.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BankAccount", x => x.Id);
+                    table.PrimaryKey("PK_BankAccounts", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_BankAccount_Users_AppUserId",
+                        name: "FK_BankAccounts_Users_AppUserId",
                         column: x => x.AppUserId,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -57,7 +57,7 @@ namespace API.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Category",
+                name: "Categories",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
@@ -69,21 +69,21 @@ namespace API.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Category", x => x.Id);
+                    table.PrimaryKey("PK_Categories", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Category_Category_ParentCategoryId",
+                        name: "FK_Categories_Categories_ParentCategoryId",
                         column: x => x.ParentCategoryId,
-                        principalTable: "Category",
+                        principalTable: "Categories",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Category_OperationType_OperationTypeId",
+                        name: "FK_Categories_OperationTypes_OperationTypeId",
                         column: x => x.OperationTypeId,
-                        principalTable: "OperationType",
+                        principalTable: "OperationTypes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Category_Users_AppUserId",
+                        name: "FK_Categories_Users_AppUserId",
                         column: x => x.AppUserId,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -91,7 +91,7 @@ namespace API.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Operation",
+                name: "Operations",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
@@ -105,65 +105,65 @@ namespace API.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Operation", x => x.Id);
+                    table.PrimaryKey("PK_Operations", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Operation_BankAccount_BankAccountId",
+                        name: "FK_Operations_BankAccounts_BankAccountId",
                         column: x => x.BankAccountId,
-                        principalTable: "BankAccount",
+                        principalTable: "BankAccounts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Operation_Category_CategoryId",
+                        name: "FK_Operations_Categories_CategoryId",
                         column: x => x.CategoryId,
-                        principalTable: "Category",
+                        principalTable: "Categories",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_BankAccount_AppUserId",
-                table: "BankAccount",
+                name: "IX_BankAccounts_AppUserId",
+                table: "BankAccounts",
                 column: "AppUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Category_AppUserId",
-                table: "Category",
+                name: "IX_Categories_AppUserId",
+                table: "Categories",
                 column: "AppUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Category_OperationTypeId",
-                table: "Category",
+                name: "IX_Categories_OperationTypeId",
+                table: "Categories",
                 column: "OperationTypeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Category_ParentCategoryId",
-                table: "Category",
+                name: "IX_Categories_ParentCategoryId",
+                table: "Categories",
                 column: "ParentCategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Operation_BankAccountId",
-                table: "Operation",
+                name: "IX_Operations_BankAccountId",
+                table: "Operations",
                 column: "BankAccountId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Operation_CategoryId",
-                table: "Operation",
+                name: "IX_Operations_CategoryId",
+                table: "Operations",
                 column: "CategoryId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Operation");
+                name: "Operations");
 
             migrationBuilder.DropTable(
-                name: "BankAccount");
+                name: "BankAccounts");
 
             migrationBuilder.DropTable(
-                name: "Category");
+                name: "Categories");
 
             migrationBuilder.DropTable(
-                name: "OperationType");
+                name: "OperationTypes");
 
             migrationBuilder.DropTable(
                 name: "Users");

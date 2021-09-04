@@ -13,10 +13,10 @@ namespace API.Data
         {
         }
         public DbSet<AppUser> Users { get; set; }
-        public DbSet<Category> Category { get; set; }
-        public DbSet<Operation> Operation { get; set; }
-        public DbSet<OperationType> OperationType { get; set; }
-        public DbSet<BankAccount> BankAccount { get; set; }
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<Operation> Operations { get; set; }
+        public DbSet<OperationType> OperationTypes { get; set; }
+        public DbSet<BankAccount> BankAccounts { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

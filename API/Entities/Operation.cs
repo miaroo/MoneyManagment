@@ -12,7 +12,6 @@ namespace API.Entities
         
         public decimal Amount { get; set; }
 
-        [Required]
         public DateTime Date { get; set; } = DateTime.Now;
 
         [Required]
