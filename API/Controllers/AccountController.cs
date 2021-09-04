@@ -22,8 +22,8 @@ namespace API.Controllers
             _mapper = mapper;
             _tokenService = tokenService;
             _context = context;
-
         }
+
         [HttpPost("register")]
         public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto)
         {
@@ -72,6 +72,5 @@ namespace API.Controllers
         {
             return await _context.Users.AnyAsync(x => x.Username == username.ToLower());
         }
-
     }
 }
