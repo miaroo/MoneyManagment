@@ -13,7 +13,7 @@ namespace API.Data.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT", nullable: false)
+                    Name = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -36,51 +36,54 @@ namespace API.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "BankAccount",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    AppUserId = table.Column<int>(type: "INTEGER", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
+                    Money = table.Column<decimal>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BankAccount", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_BankAccount_Users_AppUserId",
+                        column: x => x.AppUserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Category",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    ParentCategoryId = table.Column<int>(type: "INTEGER", nullable: false),
-                    Name = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
-                    UserId = table.Column<int>(type: "INTEGER", nullable: false),
-                    OperationTypeId = table.Column<string>(type: "TEXT", nullable: false),
-                    OperationTypeId1 = table.Column<int>(type: "INTEGER", nullable: true),
-                    AppUserId = table.Column<int>(type: "INTEGER", nullable: true)
+                    AppUserId = table.Column<int>(type: "INTEGER", nullable: false),
+                    ParentCategoryId = table.Column<int>(type: "INTEGER", nullable: true),
+                    OperationTypeId = table.Column<int>(type: "INTEGER", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Category", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Category_OperationType_OperationTypeId1",
-                        column: x => x.OperationTypeId1,
+                        name: "FK_Category_Category_ParentCategoryId",
+                        column: x => x.ParentCategoryId,
+                        principalTable: "Category",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Category_OperationType_OperationTypeId",
+                        column: x => x.OperationTypeId,
                         principalTable: "OperationType",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Category_Users_AppUserId",
-                        column: x => x.AppUserId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Saldo",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    UserId = table.Column<int>(type: "INTEGER", nullable: false),
-                    Name = table.Column<string>(type: "TEXT", nullable: false),
-                    Money = table.Column<double>(type: "REAL", nullable: false),
-                    AppUserId = table.Column<int>(type: "INTEGER", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Saldo", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Saldo_Users_AppUserId",
                         column: x => x.AppUserId,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -94,28 +97,33 @@ namespace API.Data.Migrations
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Description = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
-                    Amount = table.Column<double>(type: "REAL", nullable: false),
+                    Amount = table.Column<decimal>(type: "TEXT", nullable: false),
                     Date = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    OperationName = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
+                    Name = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
                     CategoryId = table.Column<int>(type: "INTEGER", nullable: false),
-                    SaldoId = table.Column<int>(type: "INTEGER", nullable: false)
+                    BankAccountId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Operation", x => x.Id);
                     table.ForeignKey(
+                        name: "FK_Operation_BankAccount_BankAccountId",
+                        column: x => x.BankAccountId,
+                        principalTable: "BankAccount",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
                         name: "FK_Operation_Category_CategoryId",
                         column: x => x.CategoryId,
                         principalTable: "Category",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Operation_Saldo_SaldoId",
-                        column: x => x.SaldoId,
-                        principalTable: "Saldo",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BankAccount_AppUserId",
+                table: "BankAccount",
+                column: "AppUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Category_AppUserId",
@@ -123,24 +131,24 @@ namespace API.Data.Migrations
                 column: "AppUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Category_OperationTypeId1",
+                name: "IX_Category_OperationTypeId",
                 table: "Category",
-                column: "OperationTypeId1");
+                column: "OperationTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Category_ParentCategoryId",
+                table: "Category",
+                column: "ParentCategoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Operation_BankAccountId",
+                table: "Operation",
+                column: "BankAccountId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Operation_CategoryId",
                 table: "Operation",
                 column: "CategoryId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Operation_SaldoId",
-                table: "Operation",
-                column: "SaldoId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Saldo_AppUserId",
-                table: "Saldo",
-                column: "AppUserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -149,10 +157,10 @@ namespace API.Data.Migrations
                 name: "Operation");
 
             migrationBuilder.DropTable(
-                name: "Category");
+                name: "BankAccount");
 
             migrationBuilder.DropTable(
-                name: "Saldo");
+                name: "Category");
 
             migrationBuilder.DropTable(
                 name: "OperationType");

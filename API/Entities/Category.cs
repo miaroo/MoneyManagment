@@ -1,7 +1,5 @@
-
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-
 namespace API.Entities
 {
     public class Category
@@ -18,6 +16,8 @@ namespace API.Entities
         [MaxLength(100)]
         public string Name { get; set; }
 
+        public IEnumerable<Operation> Operations { get; set; }
+
         public OperationType OperationType { get; set; }
 
         public AppUser AppUser { get; set; }
@@ -25,6 +25,5 @@ namespace API.Entities
         public Category ParentCategory { get; set; }
 
         public IEnumerable<Category> ChildCategories { get; set; }
-
     }
 }

@@ -40,6 +40,30 @@ namespace API.Data.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("API.Entities.BankAccount", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("AppUserId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<decimal>("Money")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AppUserId");
+
+                    b.ToTable("BankAccount");
+                });
+
             modelBuilder.Entity("API.Entities.Category", b =>
                 {
                     b.Property<int>("Id")
@@ -77,8 +101,11 @@ namespace API.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<double>("Amount")
-                        .HasColumnType("REAL");
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("BankAccountId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("CategoryId")
                         .HasColumnType("INTEGER");
@@ -91,19 +118,16 @@ namespace API.Data.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("OperationName")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("SaldoId")
-                        .HasColumnType("INTEGER");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("CategoryId");
+                    b.HasIndex("BankAccountId");
 
-                    b.HasIndex("SaldoId");
+                    b.HasIndex("CategoryId");
 
                     b.ToTable("Operation");
                 });
@@ -116,6 +140,7 @@ namespace API.Data.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
+                        .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -123,27 +148,15 @@ namespace API.Data.Migrations
                     b.ToTable("OperationType");
                 });
 
-            modelBuilder.Entity("API.Entities.Saldo", b =>
+            modelBuilder.Entity("API.Entities.BankAccount", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                    b.HasOne("API.Entities.AppUser", "AppUser")
+                        .WithMany("BankAccounts")
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Property<int>("AppUserId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<double>("Money")
-                        .HasColumnType("REAL");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AppUserId");
-
-                    b.ToTable("Saldo");
+                    b.Navigation("AppUser");
                 });
 
             modelBuilder.Entity("API.Entities.Category", b =>
@@ -155,7 +168,7 @@ namespace API.Data.Migrations
                         .IsRequired();
 
                     b.HasOne("API.Entities.OperationType", "OperationType")
-                        .WithMany("Category")
+                        .WithMany("Categories")
                         .HasForeignKey("OperationTypeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -173,54 +186,45 @@ namespace API.Data.Migrations
 
             modelBuilder.Entity("API.Entities.Operation", b =>
                 {
+                    b.HasOne("API.Entities.BankAccount", "BankAccount")
+                        .WithMany("Operations")
+                        .HasForeignKey("BankAccountId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("API.Entities.Category", "Category")
-                        .WithMany()
+                        .WithMany("Operations")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("API.Entities.Saldo", "Saldo")
-                        .WithMany("Operations")
-                        .HasForeignKey("SaldoId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                    b.Navigation("BankAccount");
 
                     b.Navigation("Category");
-
-                    b.Navigation("Saldo");
-                });
-
-            modelBuilder.Entity("API.Entities.Saldo", b =>
-                {
-                    b.HasOne("API.Entities.AppUser", "AppUser")
-                        .WithMany("Saldos")
-                        .HasForeignKey("AppUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("AppUser");
                 });
 
             modelBuilder.Entity("API.Entities.AppUser", b =>
                 {
-                    b.Navigation("Categories");
+                    b.Navigation("BankAccounts");
 
-                    b.Navigation("Saldos");
+                    b.Navigation("Categories");
+                });
+
+            modelBuilder.Entity("API.Entities.BankAccount", b =>
+                {
+                    b.Navigation("Operations");
                 });
 
             modelBuilder.Entity("API.Entities.Category", b =>
                 {
                     b.Navigation("ChildCategories");
+
+                    b.Navigation("Operations");
                 });
 
             modelBuilder.Entity("API.Entities.OperationType", b =>
                 {
-                    b.Navigation("Category");
-                });
-
-            modelBuilder.Entity("API.Entities.Saldo", b =>
-                {
-                    b.Navigation("Operations");
+                    b.Navigation("Categories");
                 });
 #pragma warning restore 612, 618
         }
