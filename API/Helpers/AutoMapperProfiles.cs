@@ -1,4 +1,6 @@
-﻿using AutoMapper;
+﻿using API.DTOs;
+using API.Entities;
+using AutoMapper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,5 +10,10 @@ namespace API.Helpers
 {
     public class AutoMapperProfiles : Profile
     {
+        public AutoMapperProfiles()
+        {
+            CreateMap<RegisterDto, AppUser>();
+            CreateMap<Category, CategoryDto>();
+        }
     }
 }
