@@ -19,17 +19,13 @@ namespace API.Controllers
     [Authorize]
     public class CategoryController : BaseApiController
     {
-        private readonly DataContext _context;
-
         private readonly ICategoryRepository _categoryRepository;
-
         private readonly IMapper _mapper;
         private readonly IUserRepository _userRepository;
 
-        public CategoryController(DataContext context, ICategoryRepository categoryRepository,
+        public CategoryController(ICategoryRepository categoryRepository,
             IMapper mapper, IUserRepository userRepository)
         {
-            _context = context;
             _categoryRepository = categoryRepository;
             _mapper = mapper;
             _userRepository = userRepository;
@@ -38,19 +34,29 @@ namespace API.Controllers
         [HttpPost]
         public async Task<ActionResult<Category>> CreateCategory(Category category)
         {
-            var userd = User.FindFirstValue(ClaimTypes.Name);
-            //var name = await _context.Users.FirstOrDefault(u => u.Username == userd);
-            var name = await _userRepository.GetUserByUsernameAsync(userd);
+            var userId = User.GetUserId();
 
-            var categoryprop = new Category
+            var newCategory = new Category
             {
-                AppUserId = name.Id,
+                AppUserId = userId,
                 Name = category.Name,
                 OperationTypeId = category.OperationTypeId,
                 ParentCategoryId = category.ParentCategoryId
             };
-            _categoryRepository.AddCategory(categoryprop);
-            return Ok(categoryprop.Id);
+            await _categoryRepository.AddCategory(newCategory);
+            return Ok(newCategory.Id);
+        }
+        [HttpPut("categoryId/{categoryId}")]
+        public async Task<ActionResult<Category>> UpdateCategory(UpdateCategoryDto updateCategoryDto, int categoryId)
+        {
+            var userId = User.GetUserId();
+            var categoryToUpdate =  await _categoryRepository.GetCategory(categoryId);
+            if (categoryToUpdate.AppUserId != userId) return NotFound("This category doesnt belong to this user");
+            categoryToUpdate.Name = updateCategoryDto.Name;
+            categoryToUpdate.ParentCategoryId = updateCategoryDto.ParentCategoryId;
+
+            await _categoryRepository.Update(categoryToUpdate);
+            return Ok(categoryToUpdate.Name);
         }
 
         [HttpGet]

@@ -21,25 +21,14 @@ namespace API.Data
             _context = context;
         }
 
-        public Task<AppUser> GetUserByIDAsync(int id)
+        public async Task<AppUser> GetUserByIDAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _context.Users.SingleOrDefaultAsync(u => u.Id == id);
         }
 
         public async Task<AppUser> GetUserByUsernameAsync(string username)
         {
-            //return await _context.Users.SingleOrDefaultAsync(u => u.Username == username);
-            return  _context.Users.FirstOrDefault(u => u.Username == username);
-        }
-
-        public async Task<bool> SaveAllAsync()
-        {
-            return await _context.SaveChangesAsync() > 0;
-        }
-
-        public void Update(AppUser user)
-        {
-            _context.Entry(user).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+            return await _context.Users.SingleOrDefaultAsync(u => u.Username == username);
         }
     }
 }

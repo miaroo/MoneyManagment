@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using API.DTOs;
 using API.Entities;
 using API.Interfaces;
 using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
-using API.Data;
-
 
 namespace API.Data
 {
@@ -24,38 +19,30 @@ namespace API.Data
             _mapper = mapper;
         }
 
-        public void AddCategory(Category category)
+        public async Task AddCategory(Category category)
         {
-            _context.Categories.Add(category);
-            _context.SaveChanges();
-
+            await _context.Categories.AddAsync(category);
+            await _context.SaveChangesAsync();
         }
 
-        public void DeleteCategory(Category category)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<Category> GetAll(int Id)
-        {
-            return _context.Categories.Where(x => x.AppUserId == Id).ToList();
-        }
-
-        public async Task<IEnumerable<Category>> GetCategoriesAsync(int Id)
+        public async Task<IEnumerable<Category>> GetCategoriesAsync(int AppUserId)
         {
             return await _context.Categories
-                .Where(b => b.AppUserId == Id)
+                .Where(b => b.AppUserId == AppUserId)
                 .ToListAsync();
         }
 
-        public CategoryDto GetCategory(int UserId, string Name)
+        public async Task<Category> GetCategory(int CategoryId)
         {
-            throw new NotImplementedException();
+            return await _context.Categories
+                .SingleOrDefaultAsync(c => c.Id == CategoryId);
         }
 
-        public void Update(Category category)
+        public async Task Update(Category category)
         {
-            throw new NotImplementedException();
+            _context.Categories.Update(category);
+            await _context.SaveChangesAsync();
+
         }
     }
 }
