@@ -19,9 +19,15 @@ namespace API.Data
             _mapper = mapper;
         }
 
-        public async Task AddCategory(Category category)
+        public async Task AddCategoryAsync(Category category)
         {
             await _context.Categories.AddAsync(category);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteCategoryAsync(int CategoryId)
+        {
+            _context.Remove(await _context.Categories.SingleOrDefaultAsync(d => d.Id == CategoryId));
             await _context.SaveChangesAsync();
         }
 
@@ -32,13 +38,13 @@ namespace API.Data
                 .ToListAsync();
         }
 
-        public async Task<Category> GetCategory(int CategoryId)
+        public async Task<Category> GetCategoryAsync(int CategoryId)
         {
             return await _context.Categories
                 .SingleOrDefaultAsync(c => c.Id == CategoryId);
         }
 
-        public async Task Update(Category category)
+        public async Task UpdateAsync(Category category)
         {
             _context.Categories.Update(category);
             await _context.SaveChangesAsync();

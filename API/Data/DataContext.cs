@@ -34,6 +34,12 @@ namespace API.Data
                 .OnDelete(DeleteBehavior.Restrict)
                 .IsRequired();
 
+            modelBuilder.Entity<Category>()
+                .HasOne(a => a.ParentCategory)
+                .WithMany(c => c.ChildCategories)
+                .HasForeignKey(s => s.ParentCategoryId)
+                .OnDelete(DeleteBehavior.Cascade);
+
             modelBuilder.Entity<Operation>()
                 .HasOne(a => a.Category)
                 .WithMany(c => c.Operations)

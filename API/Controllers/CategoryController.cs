@@ -32,39 +32,49 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Category>> CreateCategory(Category category)
+        public async Task<ActionResult<CategoryDto>> CreateCategory(CategoryDto categoryDto)
         {
             var userId = User.GetUserId();
 
             var newCategory = new Category
             {
                 AppUserId = userId,
-                Name = category.Name,
-                OperationTypeId = category.OperationTypeId,
-                ParentCategoryId = category.ParentCategoryId
+                Name = categoryDto.Name,
+                OperationTypeId = categoryDto.OperationTypeId,
+                ParentCategoryId = categoryDto.ParentCategoryId
             };
-            await _categoryRepository.AddCategory(newCategory);
+            await _categoryRepository.AddCategoryAsync(newCategory);
             return Ok(newCategory.Id);
         }
-        [HttpPut("categoryId/{categoryId}")]
-        public async Task<ActionResult<Category>> UpdateCategory(UpdateCategoryDto updateCategoryDto, int categoryId)
+        [HttpPut("categoryId={categoryId}")]
+        public async Task<ActionResult<CategoryDto>> UpdateCategory(UpdateCategoryDto updateCategoryDto, int categoryId)
         {
             var userId = User.GetUserId();
-            var categoryToUpdate =  await _categoryRepository.GetCategory(categoryId);
+            var categoryToUpdate =  await _categoryRepository.GetCategoryAsync(categoryId);
             if (categoryToUpdate.AppUserId != userId) return NotFound("This category doesnt belong to this user");
             categoryToUpdate.Name = updateCategoryDto.Name;
             categoryToUpdate.ParentCategoryId = updateCategoryDto.ParentCategoryId;
+            await _categoryRepository.UpdateAsync(categoryToUpdate);
 
-            await _categoryRepository.Update(categoryToUpdate);
-            return Ok(categoryToUpdate.Name);
+            return Ok(categoryToUpdate.Id);
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Category>>> GetUserCategories()
+        public async Task<ActionResult<IEnumerable<CategoryDto>>> GetUserCategories()
         {
-            var user = User.GetUserId();
-            var categories = await _categoryRepository.GetCategoriesAsync(user);
+            var userId = User.GetUserId();
+            var categories = await _categoryRepository.GetCategoriesAsync(userId);
             return Ok(categories);
+        }
+        [HttpDelete("deleteCategoryId={DeleteCategoryId}")]
+        public async Task<ActionResult> DeleteCategory(int DeleteCategoryId)
+        {
+            var userId = User.GetUserId();
+            var categoryToDelete = await _categoryRepository.GetCategoryAsync(DeleteCategoryId);
+            if (categoryToDelete.AppUserId != userId) return NotFound("This category doesnt belong to this user");
+            await _categoryRepository.DeleteCategoryAsync(DeleteCategoryId);
+
+            return Ok($"Category number:{DeleteCategoryId} has been removed");
         }
     }
 }
