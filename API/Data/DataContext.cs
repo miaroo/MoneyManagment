@@ -38,13 +38,13 @@ namespace API.Data
                 .HasOne(a => a.ParentCategory)
                 .WithMany(c => c.ChildCategories)
                 .HasForeignKey(s => s.ParentCategoryId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.SetNull);
 
             modelBuilder.Entity<Operation>()
                 .HasOne(a => a.Category)
                 .WithMany(c => c.Operations)
                 .HasForeignKey(s => s.CategoryId)
-                .OnDelete(DeleteBehavior.Restrict)
+                .OnDelete(DeleteBehavior.SetNull)
                 .IsRequired();
 
             modelBuilder.Entity<Operation>()
@@ -53,6 +53,14 @@ namespace API.Data
                 .HasForeignKey(s => s.BankAccountId)
                 .OnDelete(DeleteBehavior.Restrict)
                 .IsRequired();
+
+            modelBuilder.Entity<BankAccount>()
+                .HasOne(a => a.AppUser)
+                .WithMany(c => c.BankAccounts)
+                .HasForeignKey(s => s.AppUserId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .IsRequired();
+
         }
     }
 }

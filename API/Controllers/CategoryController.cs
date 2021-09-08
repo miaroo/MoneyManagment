@@ -66,15 +66,22 @@ namespace API.Controllers
             var categories = await _categoryRepository.GetCategoriesAsync(userId);
             return Ok(categories);
         }
-        [HttpDelete("deleteCategoryId={DeleteCategoryId}")]
-        public async Task<ActionResult> DeleteCategory(int DeleteCategoryId)
+        [HttpDelete("deleteCategoryId={deleteCategoryId}")]
+        public async Task<ActionResult> DeleteCategory(int deleteCategoryId)
         {
             var userId = User.GetUserId();
-            var categoryToDelete = await _categoryRepository.GetCategoryAsync(DeleteCategoryId);
+            var categoryToDelete = await _categoryRepository.GetCategoryAsync(deleteCategoryId);
             if (categoryToDelete.AppUserId != userId) return NotFound("This category doesnt belong to this user");
-            await _categoryRepository.DeleteCategoryAsync(DeleteCategoryId);
+            var childrenCategories = await _categoryRepository.GetChildrenCategories(categoryToDelete.Id);
+            var doesHaveParent = categoryToDelete.ParentCategoryId;
+            await _categoryRepository.DeleteCategoryAsync(categoryToDelete);
 
-            return Ok($"Category number:{DeleteCategoryId} has been removed");
+            if (childrenCategories != null && doesHaveParent != null)
+            {
+                await _categoryRepository.SetChildrenParentIdAsync(childrenCategories, doesHaveParent);
+            }
+
+            return Ok($"Category number:{deleteCategoryId} has been removed");
         }
     }
 }

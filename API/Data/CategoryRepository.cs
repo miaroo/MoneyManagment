@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using API.DTOs;
 using API.Entities;
 using API.Interfaces;
 using AutoMapper;
@@ -25,9 +26,9 @@ namespace API.Data
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteCategoryAsync(int CategoryId)
+        public async Task DeleteCategoryAsync(Category category)
         {
-            _context.Remove(await _context.Categories.SingleOrDefaultAsync(d => d.Id == CategoryId));
+            _context.Remove(category);
             await _context.SaveChangesAsync();
         }
 
@@ -42,6 +43,23 @@ namespace API.Data
         {
             return await _context.Categories
                 .SingleOrDefaultAsync(c => c.Id == CategoryId);
+        }
+
+        public async Task<IEnumerable<Category>> GetChildrenCategories(int? parentCategoryId)
+        {
+            return await _context.Categories
+                .Where(c => c.ParentCategoryId == parentCategoryId)
+                .ToListAsync();
+        }
+
+        public async Task SetChildrenParentIdAsync(IEnumerable<Category> childrenList, int? newParentId)
+        {
+            foreach(var children in childrenList)
+            {
+                children.ParentCategoryId = newParentId;
+            }
+            _context.Categories.UpdateRange(childrenList);
+            await _context.SaveChangesAsync();
         }
 
         public async Task UpdateAsync(Category category)
