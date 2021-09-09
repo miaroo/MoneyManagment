@@ -11,11 +11,11 @@ namespace API.Interfaces
     public interface ICategoryRepository
     {
         Task AddCategoryAsync(Category category);
-        Task<IEnumerable<Category>> GetCategoriesAsync(int UserId);
+        Task<IEnumerable<Category>> GetCategoriesAsync(int userId);
         Task UpdateAsync(Category category);
-        Task<Category> GetCategoryAsync(int CategoryId);
+        Task<Category> GetCategoryAsync(int categoryId);
         Task DeleteCategoryAsync(Category category);
-        Task<IEnumerable<Category>> GetChildrenCategories(int? parentCategoryId);
-        Task SetChildrenParentIdAsync(IEnumerable<Category> childrenList, int? newParentId);
+        Task<Category> GetCategoryToDeleteAndChildrenCategories(int categoryToDeleteId);
+        Task UpdateRangeAsync(IEnumerable<Category> childrenList);
     }
 }

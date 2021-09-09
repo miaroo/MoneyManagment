@@ -45,19 +45,16 @@ namespace API.Data
                 .SingleOrDefaultAsync(c => c.Id == CategoryId);
         }
 
-        public async Task<IEnumerable<Category>> GetChildrenCategories(int? parentCategoryId)
+        public async Task<Category> GetCategoryToDeleteAndChildrenCategories(int categoryToDeleteId)
         {
             return await _context.Categories
-                .Where(c => c.ParentCategoryId == parentCategoryId)
-                .ToListAsync();
+                    .Include(c => c.ChildCategories)
+                    .SingleOrDefaultAsync(x => x.Id == categoryToDeleteId);
+
         }
 
-        public async Task SetChildrenParentIdAsync(IEnumerable<Category> childrenList, int? newParentId)
+        public async Task UpdateRangeAsync(IEnumerable<Category> childrenList)
         {
-            foreach(var children in childrenList)
-            {
-                children.ParentCategoryId = newParentId;
-            }
             _context.Categories.UpdateRange(childrenList);
             await _context.SaveChangesAsync();
         }

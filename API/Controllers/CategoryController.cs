@@ -66,19 +66,36 @@ namespace API.Controllers
             var categories = await _categoryRepository.GetCategoriesAsync(userId);
             return Ok(categories);
         }
+
+        //[HttpGet("user={id}")]
+        //public async Task<ActionResult<IEnumerable<CategoryDto>>> GetUserCategories(int id)
+        //{
+        //    var categoryToDeleteAndItsChildrens = await _categoryRepository.
+        //        GetCategoryToDeleteAndChildrenCategories(id);
+        //    var x = 5;
+        //    var z = 9;
+        //    return Ok(categoryToDeleteAndItsChildrens);
+        //}
+
         [HttpDelete("deleteCategoryId={deleteCategoryId}")]
         public async Task<ActionResult> DeleteCategory(int deleteCategoryId)
         {
             var userId = User.GetUserId();
-            var categoryToDelete = await _categoryRepository.GetCategoryAsync(deleteCategoryId);
-            if (categoryToDelete.AppUserId != userId) return NotFound("This category doesnt belong to this user");
-            var childrenCategories = await _categoryRepository.GetChildrenCategories(categoryToDelete.Id);
-            var doesHaveParent = categoryToDelete.ParentCategoryId;
-            await _categoryRepository.DeleteCategoryAsync(categoryToDelete);
+            var categoryToDeleteAndItsChildrens = await _categoryRepository.
+                GetCategoryToDeleteAndChildrenCategories(deleteCategoryId);
 
-            if (childrenCategories != null && doesHaveParent != null)
+            var catergoryToDeleteParentId = categoryToDeleteAndItsChildrens.ParentCategoryId;
+
+            if (categoryToDeleteAndItsChildrens.AppUserId != userId) return NotFound("This category doesnt belong to this user");
+            await _categoryRepository.DeleteCategoryAsync(categoryToDeleteAndItsChildrens);
+
+            if (categoryToDeleteAndItsChildrens.ChildCategories != null && catergoryToDeleteParentId != null)
             {
-                await _categoryRepository.SetChildrenParentIdAsync(childrenCategories, doesHaveParent);
+                foreach (var children in categoryToDeleteAndItsChildrens.ChildCategories)
+                {
+                    children.ParentCategoryId = catergoryToDeleteParentId;
+                }
+                await _categoryRepository.UpdateRangeAsync(categoryToDeleteAndItsChildrens.ChildCategories);
             }
 
             return Ok($"Category number:{deleteCategoryId} has been removed");
