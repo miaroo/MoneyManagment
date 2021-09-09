@@ -45,7 +45,7 @@ namespace API.Data
                 .SingleOrDefaultAsync(c => c.Id == CategoryId);
         }
 
-        public async Task<Category> GetCategoryToDeleteAndChildrenCategories(int categoryToDeleteId)
+        public async Task<Category> GetCategoryToDeleteAndChildrenCategoriesAsync(int categoryToDeleteId)
         {
             return await _context.Categories
                     .Include(c => c.ChildCategories)

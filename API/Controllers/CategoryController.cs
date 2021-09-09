@@ -51,7 +51,7 @@ namespace API.Controllers
         {
             var userId = User.GetUserId();
             var categoryToUpdate =  await _categoryRepository.GetCategoryAsync(categoryId);
-            if (categoryToUpdate.AppUserId != userId) return NotFound("This category doesnt belong to this user");
+            if (categoryToUpdate.AppUserId != userId) return BadRequest("This category doesnt belong to this user");
             categoryToUpdate.Name = updateCategoryDto.Name;
             categoryToUpdate.ParentCategoryId = updateCategoryDto.ParentCategoryId;
             await _categoryRepository.UpdateAsync(categoryToUpdate);
@@ -67,33 +67,23 @@ namespace API.Controllers
             return Ok(categories);
         }
 
-        //[HttpGet("user={id}")]
-        //public async Task<ActionResult<IEnumerable<CategoryDto>>> GetUserCategories(int id)
-        //{
-        //    var categoryToDeleteAndItsChildrens = await _categoryRepository.
-        //        GetCategoryToDeleteAndChildrenCategories(id);
-        //    var x = 5;
-        //    var z = 9;
-        //    return Ok(categoryToDeleteAndItsChildrens);
-        //}
-
         [HttpDelete("deleteCategoryId={deleteCategoryId}")]
         public async Task<ActionResult> DeleteCategory(int deleteCategoryId)
         {
             var userId = User.GetUserId();
             var categoryToDeleteAndItsChildrens = await _categoryRepository.
-                GetCategoryToDeleteAndChildrenCategories(deleteCategoryId);
+                GetCategoryToDeleteAndChildrenCategoriesAsync(deleteCategoryId);
 
-            var catergoryToDeleteParentId = categoryToDeleteAndItsChildrens.ParentCategoryId;
+            var category = categoryToDeleteAndItsChildrens.ParentCategoryId;
 
-            if (categoryToDeleteAndItsChildrens.AppUserId != userId) return NotFound("This category doesnt belong to this user");
+            if (categoryToDeleteAndItsChildrens.AppUserId != userId) return BadRequest("This category doesnt belong to this user");
             await _categoryRepository.DeleteCategoryAsync(categoryToDeleteAndItsChildrens);
 
-            if (categoryToDeleteAndItsChildrens.ChildCategories != null && catergoryToDeleteParentId != null)
+            if (categoryToDeleteAndItsChildrens.ChildCategories.Any() && category != null)
             {
                 foreach (var children in categoryToDeleteAndItsChildrens.ChildCategories)
                 {
-                    children.ParentCategoryId = catergoryToDeleteParentId;
+                    children.ParentCategoryId = category;
                 }
                 await _categoryRepository.UpdateRangeAsync(categoryToDeleteAndItsChildrens.ChildCategories);
             }

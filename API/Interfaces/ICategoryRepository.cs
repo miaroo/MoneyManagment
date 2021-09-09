@@ -15,7 +15,7 @@ namespace API.Interfaces
         Task UpdateAsync(Category category);
         Task<Category> GetCategoryAsync(int categoryId);
         Task DeleteCategoryAsync(Category category);
-        Task<Category> GetCategoryToDeleteAndChildrenCategories(int categoryToDeleteId);
+        Task<Category> GetCategoryToDeleteAndChildrenCategoriesAsync(int categoryToDeleteId);
         Task UpdateRangeAsync(IEnumerable<Category> childrenList);
     }
 }
