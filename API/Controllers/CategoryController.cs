@@ -19,14 +19,14 @@ namespace API.Controllers
     [Authorize]
     public class CategoryController : BaseApiController
     {
-        private readonly ICategoryRepository _categoryRepository;
+        private readonly ICategoryRepository _category;
         private readonly IMapper _mapper;
         private readonly IUserRepository _userRepository;
 
         public CategoryController(ICategoryRepository categoryRepository,
             IMapper mapper, IUserRepository userRepository)
         {
-            _categoryRepository = categoryRepository;
+            _category = categoryRepository;
             _mapper = mapper;
             _userRepository = userRepository;
         }
@@ -43,18 +43,18 @@ namespace API.Controllers
                 OperationTypeId = categoryDto.OperationTypeId,
                 ParentCategoryId = categoryDto.ParentCategoryId
             };
-            await _categoryRepository.AddCategoryAsync(newCategory);
+            await _category.AddCategoryAsync(newCategory);
             return Ok(newCategory.Id);
         }
         [HttpPut("categoryId={categoryId}")]
         public async Task<ActionResult<CategoryDto>> UpdateCategory(UpdateCategoryDto updateCategoryDto, int categoryId)
         {
             var userId = User.GetUserId();
-            var categoryToUpdate =  await _categoryRepository.GetCategoryAsync(categoryId);
+            var categoryToUpdate =  await _category.GetCategoryAsync(categoryId);
             if (categoryToUpdate.AppUserId != userId) return BadRequest("This category doesnt belong to this user");
             categoryToUpdate.Name = updateCategoryDto.Name;
             categoryToUpdate.ParentCategoryId = updateCategoryDto.ParentCategoryId;
-            await _categoryRepository.UpdateAsync(categoryToUpdate);
+            await _category.UpdateAsync(categoryToUpdate);
 
             return Ok(categoryToUpdate.Id);
         }
@@ -63,7 +63,7 @@ namespace API.Controllers
         public async Task<ActionResult<IEnumerable<CategoryDto>>> GetUserCategories()
         {
             var userId = User.GetUserId();
-            var categories = await _categoryRepository.GetCategoriesAsync(userId);
+            var categories = await _category.GetCategoriesAsync(userId);
             return Ok(categories);
         }
 
@@ -71,21 +71,21 @@ namespace API.Controllers
         public async Task<ActionResult> DeleteCategory(int deleteCategoryId)
         {
             var userId = User.GetUserId();
-            var categoryToDeleteAndItsChildrens = await _categoryRepository.
+            var categoryToDeleteAndItsChildrens = await _category.
                 GetCategoryToDeleteAndChildrenCategoriesAsync(deleteCategoryId);
 
-            var category = categoryToDeleteAndItsChildrens.ParentCategoryId;
+            var categoryToDeleteParentId = categoryToDeleteAndItsChildrens.ParentCategoryId;
 
             if (categoryToDeleteAndItsChildrens.AppUserId != userId) return BadRequest("This category doesnt belong to this user");
-            await _categoryRepository.DeleteCategoryAsync(categoryToDeleteAndItsChildrens);
+            await _category.DeleteCategoryAsync(categoryToDeleteAndItsChildrens);
 
-            if (categoryToDeleteAndItsChildrens.ChildCategories.Any() && category != null)
+            if (categoryToDeleteAndItsChildrens.ChildCategories.Any() && categoryToDeleteParentId != null)
             {
                 foreach (var children in categoryToDeleteAndItsChildrens.ChildCategories)
                 {
-                    children.ParentCategoryId = category;
+                    children.ParentCategoryId = categoryToDeleteParentId;
                 }
-                await _categoryRepository.UpdateRangeAsync(categoryToDeleteAndItsChildrens.ChildCategories);
+                await _category.UpdateRangeAsync(categoryToDeleteAndItsChildrens.ChildCategories);
             }
 
             return Ok($"Category number:{deleteCategoryId} has been removed");

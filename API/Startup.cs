@@ -29,7 +29,7 @@ namespace API
     public class Startup
     {
         private readonly IConfiguration _config;
-
+        readonly string MyAllowSpecificOrigins = "_MyAllowSpecificOrigins";
         public Startup(IConfiguration config)
         {
             _config = config;
@@ -50,6 +50,16 @@ namespace API
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ITokenService, TokenService>();
             services.AddAutoMapper(typeof(Startup));
+            //services.AddCors(options =>
+            //{
+            //    options.AddPolicy(
+            //        name: "MyAllowSpecificOrigins",
+            //        builder => {
+            //            builder.AllowAnyOrigin()
+            //                    .AllowAnyMethod()
+            //                    .AllowAnyHeader();
+            //        });
+            //});
             services.AddCors();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
@@ -78,11 +88,12 @@ namespace API
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1"));
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseRouting();
 
-            app.UseCors(policy => policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:4200"));
+            //app.UseCors("MyAllowSpecificOrigins");
+            app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
             app.UseAuthentication();
 
