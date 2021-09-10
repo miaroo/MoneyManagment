@@ -71,21 +71,21 @@ namespace API.Controllers
         public async Task<ActionResult> DeleteCategory(int deleteCategoryId)
         {
             var userId = User.GetUserId();
-            var categoryToDeleteAndItsChildrens = await _category.
+            var category = await _category.
                 GetCategoryToDeleteAndChildrenCategoriesAsync(deleteCategoryId);
 
-            var categoryToDeleteParentId = categoryToDeleteAndItsChildrens.ParentCategoryId;
+            var categoryToDeleteParentId = category.ParentCategoryId;
 
-            if (categoryToDeleteAndItsChildrens.AppUserId != userId) return BadRequest("This category doesnt belong to this user");
-            await _category.DeleteCategoryAsync(categoryToDeleteAndItsChildrens);
+            if (category.AppUserId != userId) return BadRequest("This category doesnt belong to this user");
+            await _category.DeleteCategoryAsync(category);
 
-            if (categoryToDeleteAndItsChildrens.ChildCategories.Any() && categoryToDeleteParentId != null)
+            if (category.ChildCategories.Any() && categoryToDeleteParentId != null)
             {
-                foreach (var children in categoryToDeleteAndItsChildrens.ChildCategories)
+                foreach (var children in category.ChildCategories)
                 {
                     children.ParentCategoryId = categoryToDeleteParentId;
                 }
-                await _category.UpdateRangeAsync(categoryToDeleteAndItsChildrens.ChildCategories);
+                await _category.UpdateRangeAsync(category.ChildCategories);
             }
 
             return Ok($"Category number:{deleteCategoryId} has been removed");
