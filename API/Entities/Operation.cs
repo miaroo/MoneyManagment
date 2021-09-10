@@ -18,7 +18,7 @@ namespace API.Entities
         [MaxLength(100)]
         public string Name { get; set; }
 
-        public int CategoryId { get; set; }
+        public int? CategoryId { get; set; }
 
         public int BankAccountId { get; set; }
 

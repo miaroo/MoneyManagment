@@ -19,34 +19,48 @@ namespace API.Data
         public DbSet<BankAccount> BankAccounts { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        modelBuilder.Entity<Category>()
-            .HasOne(a => a.AppUser)
-            .WithMany(c => c.Categories)
-            .HasForeignKey(s => s.AppUserId)
-            .OnDelete(DeleteBehavior.Restrict)
-            .IsRequired();
+        {
+            modelBuilder.Entity<Category>()
+                .HasOne(a => a.AppUser)
+                .WithMany(c => c.Categories)
+                .HasForeignKey(s => s.AppUserId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .IsRequired();
 
-        modelBuilder.Entity<Category>()
-            .HasOne(a => a.OperationType)
-            .WithMany(c => c.Categories)
-            .HasForeignKey(s => s.OperationTypeId)
-            .OnDelete(DeleteBehavior.Restrict)
-            .IsRequired();
+            modelBuilder.Entity<Category>()
+                .HasOne(a => a.OperationType)
+                .WithMany(c => c.Categories)
+                .HasForeignKey(s => s.OperationTypeId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .IsRequired();
 
-        modelBuilder.Entity<Operation>()
-            .HasOne(a => a.Category)
-            .WithMany(c => c.Operations)
-            .HasForeignKey(s => s.CategoryId)
-            .OnDelete(DeleteBehavior.Restrict)
-            .IsRequired();
+            modelBuilder.Entity<Category>()
+                .HasOne(a => a.ParentCategory)
+                .WithMany(c => c.ChildCategories)
+                .HasForeignKey(s => s.ParentCategoryId)
+                .OnDelete(DeleteBehavior.SetNull);
 
-        modelBuilder.Entity<Operation>()
-            .HasOne(a => a.BankAccount)
-            .WithMany(c => c.Operations)
-            .HasForeignKey(s => s.BankAccountId)
-            .OnDelete(DeleteBehavior.Restrict)
-            .IsRequired();    
+            modelBuilder.Entity<Operation>()
+                .HasOne(a => a.Category)
+                .WithMany(c => c.Operations)
+                .HasForeignKey(s => s.CategoryId)
+                .OnDelete(DeleteBehavior.SetNull)
+                .IsRequired();
+
+            modelBuilder.Entity<Operation>()
+                .HasOne(a => a.BankAccount)
+                .WithMany(c => c.Operations)
+                .HasForeignKey(s => s.BankAccountId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .IsRequired();
+
+            modelBuilder.Entity<BankAccount>()
+                .HasOne(a => a.AppUser)
+                .WithMany(c => c.BankAccounts)
+                .HasForeignKey(s => s.AppUserId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .IsRequired();
+
+        }
     }
-  }
 }
