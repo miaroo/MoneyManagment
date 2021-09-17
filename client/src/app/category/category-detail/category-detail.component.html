@@ -1,0 +1,31 @@
+<div class="row" *ngIf="category">
+    <div class="card">
+        <div class="card-body">
+            <div>
+                <strong>
+                    ID : {{category.id}}
+                </strong>
+            </div>
+            <div>
+                <strong>
+                    Name : {{category.name}}
+                </strong>
+            </div>
+            <div>
+                <strong>
+                    App User ID : {{category.appUserId}}
+                </strong>
+            </div>
+            <div>
+                <strong>
+                    Parent Category Id: {{category.parentCategoryId}}
+                </strong>
+            </div>
+            <div>
+                <strong>
+                    Operation type : {{category.operationTypeId}}
+                </strong>
+            </div>
+        </div>
+    </div>
+</div>

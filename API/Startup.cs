@@ -23,6 +23,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication;
 using System.Text;
+using API.Middleware;
 
 namespace API
 {
@@ -50,16 +51,6 @@ namespace API
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ITokenService, TokenService>();
             services.AddAutoMapper(typeof(Startup));
-            //services.AddCors(options =>
-            //{
-            //    options.AddPolicy(
-            //        name: "MyAllowSpecificOrigins",
-            //        builder => {
-            //            builder.AllowAnyOrigin()
-            //                    .AllowAnyMethod()
-            //                    .AllowAnyHeader();
-            //        });
-            //});
             services.AddCors();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
@@ -81,18 +72,18 @@ namespace API
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1"));
-            }
 
-            //app.UseHttpsRedirection();
+            app.UseMiddleware<ExceptionMiddleware>();
+            //if (env.IsDevelopment())
+            //{
+            //    app.UseSwagger();
+            //    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1"));
+            //}
+
+            app.UseHttpsRedirection();
 
             app.UseRouting();
 
-            //app.UseCors("MyAllowSpecificOrigins");
             app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
             app.UseAuthentication();

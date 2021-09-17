@@ -13,6 +13,7 @@ using API.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
+using API.Helpers;
 
 namespace API.Controllers
 {
@@ -50,7 +51,7 @@ namespace API.Controllers
         public async Task<ActionResult<CategoryDto>> UpdateCategory(UpdateCategoryDto updateCategoryDto, int categoryId)
         {
             var userId = User.GetUserId();
-            var categoryToUpdate =  await _categoryRepository.GetCategoryAsync(categoryId);
+            var categoryToUpdate = await _categoryRepository.GetCategoryAsync(categoryId);
             if (categoryToUpdate.AppUserId != userId) return BadRequest("This category doesnt belong to this user");
             categoryToUpdate.Name = updateCategoryDto.Name;
             categoryToUpdate.ParentCategoryId = updateCategoryDto.ParentCategoryId;
@@ -67,12 +68,32 @@ namespace API.Controllers
             return Ok(categories);
         }
 
+        [HttpGet("{categoryId}")]
+        public async Task<ActionResult<CategoryDto>> GetUserCategory(int categoryId)
+        {
+            var category =  await _categoryRepository.GetCategoryAsync(categoryId);
+            return Ok(category);
+        }
+
+        [HttpGet("pagination")]
+        public async Task<ActionResult<IEnumerable<CategoryDto>>> GetUserPaginatedCategories([FromQuery]UserParams userParams)
+        {
+            //var user = await _userRepository.GetUserByUsernameAsync(User.GetUsername());
+            userParams.CurrentUserName = User.GetUsername();
+            
+            var categories = await _categoryRepository.GetPaginatedCategories(userParams, User.GetUserId());
+            Response.AddPaginationHeader(categories.CurrentPage, categories.PageSize,
+            categories.TotalCount, categories.TotalPages);
+
+            return Ok(categories);
+        }
+
         [HttpDelete("deleteCategoryId={deleteCategoryId}")]
         public async Task<ActionResult> DeleteCategory(int deleteCategoryId)
         {
             var userId = User.GetUserId();
             var category = await _categoryRepository.
-                GetCategoryToDeleteAndChildrenCategoriesAsync(deleteCategoryId);
+                GetCategoryAndChildrenCategoriesAsync(deleteCategoryId);
 
             var categoryToDeleteParentId = category.ParentCategoryId;
 

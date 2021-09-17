@@ -1,0 +1,62 @@
+<!-- <div class="card border-danger mb-4">
+    <div class="card-body p-1">
+        <h6 class="card-title text-center mb-1">
+            <i class="fa fa-user mr-2"></i>
+            {{category.name}}, {{category.operationTypeId}}
+        </h6>
+        <p class="card-text text-muted text-center">
+            {{category.id}}
+            
+        </p>
+        <hr>
+    </div>
+    <ul class="list-inline member-icons animate text-center">
+        <li class="list-inline-item"><button routerLink='/categories/{{category.id}}' class="btn btn-primary">
+            <i class="fa fa-user"></i> </button> </li>
+        <li class="list-inline-item"><button class="btn btn-primary">
+            <i class="fa fa-trash"></i> </button> </li>
+    </ul>
+</div> -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+
+            <div class="card l-bg-green-dark" >
+                <div class="card-statistic-3 p-4">
+                    <div class="mb-0">
+                        <h3 class="card-title mb-0">{{category.name}}</h3>
+                    </div>
+                    <div *ngIf="category.operationTypeId == 1">
+                        <div class="row align-items-center mb-0 d-flex">
+                            <div class="col-9">
+                                <h6 class="d-flex align-items-center mb-0">
+                                   Category Type <p style="color:rgb(18, 109, 9)">Income</p>
+                                </h6>
+                            </div>
+                            <div class="col-3 text-center">
+                                <h3>
+                                    <span> <i  class="fa fa-arrow-up" style="color:rgb(19, 105, 8)"></i></span>
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="category.operationTypeId == 2">
+                        <div class="row align-items-center mb-0 d-flex">
+                            <div class="col-9">
+                                <h6 class="d-flex align-items-center mb-0">
+                                   Category Type <p style="color:rgb(170, 31, 31)">Expense</p>
+                                </h6>
+                            </div>
+                            <div class="col-3 text-center">
+                                <h3>
+                                    <span> <i  class="fa fa-arrow-down" style="color:red"></i></span>
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+                            <ul class="list-inline member-icons animate text-center">
+                                <li class="list-inline-item"><button routerLink='/categories/{{category.id}}' class="btn btn-primary">
+                                <i class="fa fa-user"></i> </button> </li>
+                                <li class="list-inline-item"><button class="btn btn-primary">
+                                <i class="fa fa-trash"></i> </button> </li>
+                                </ul>
+                </div>
+            </div>

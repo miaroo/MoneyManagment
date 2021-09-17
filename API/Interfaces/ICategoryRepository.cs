@@ -15,7 +15,9 @@ namespace API.Interfaces
         Task UpdateAsync(Category category);
         Task<Category> GetCategoryAsync(int categoryId);
         Task DeleteCategoryAsync(Category category);
-        Task<Category> GetCategoryToDeleteAndChildrenCategoriesAsync(int categoryToDeleteId);
+        Task<Category> GetCategoryAndChildrenCategoriesAsync(int categoryToDeleteId);
+
+        Task<PagedList<CategoryDto>> GetPaginatedCategories(UserParams userParams, int AppUserId);
         Task UpdateRangeAsync(IEnumerable<Category> childrenList);
     }
 }

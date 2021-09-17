@@ -1,0 +1,56 @@
+<div class="text-center mt-2">
+    <h1>You have {{pagination?.totalItems}} categories</h1>
+</div>
+
+<div class="contrainer mt-3">
+    <form #form="ngForm" class="form-inline mb-3" (ngSubmit)="loadCategories()" autocomplete="off"></form>
+    <div class="md-form active-pink active-pink-2 mb-3">
+        <input class="form-control" type="search" id="search1" aria-label="Search" mdbInput>
+        <label for="search1">Search</label>
+      </div>
+
+    <div class ="form-group">
+        <div class="btn-group float-center">
+            <button
+            type="button" 
+            class="btn btn-primary"
+            name='orderBy'
+            (click)="loadCategories()"
+            [(ngModel)]="userParams.orderBy"
+            btnRadio='alphabet'>
+                A-Z
+            </button>
+    
+            <button
+            type="button" 
+            class="btn btn-primary"
+            name='orderBy'
+            (click)="loadCategories()"
+            [(ngModel)]="userParams.orderBy"
+            btnRadio='created'>
+                Newest Categories
+            </button>
+        </div>
+    </div>
+</div>
+
+
+<div class="row ">
+    <div *ngFor="let category of categories" class="col-3">
+        <app-category-card [category]="category"></app-category-card>
+    </div>
+</div>
+
+<div class="d-flex justify-content-center" *ngIf="pagination" >
+    <pagination 
+    [boundaryLinks]="true" 
+    [totalItems]="pagination.totalItems"
+    [itemsPerPage]="pagination.itemsPerPage"
+    [(ngModel)]="pagination.currentPage"
+    (pageChanged)="pageChanged($event)"
+    previousText="&lsaquo;" 
+    nextText="&rsaquo;"
+    firstText="&laquo;" 
+    lastText="&raquo;">
+</pagination>
+</div>
