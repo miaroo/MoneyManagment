@@ -28,6 +28,11 @@ import { TextInputComponent } from './_forms/text-input/text-input.component';
 import { JwtInterceptor } from './_interceptors/jwt.interceptor';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { RouterModule } from '@angular/router';
+import { CategoryAddComponent } from './category/category-add/category-add.component';
+import { SelectDropDownModule } from 'ngx-select-dropdown'
+import { NgSelectModule } from '@ng-select/ng-select';
+import { ModalModule } from 'ngx-bootstrap/modal';
+
 
 
 
@@ -50,6 +55,7 @@ import { RouterModule } from '@angular/router';
     NotFoundComponent,
     ServerErrorComponent,
     TextInputComponent,
+    CategoryAddComponent,
     
   ],
   imports: [
@@ -61,8 +67,10 @@ import { RouterModule } from '@angular/router';
     FormsModule,
     ReactiveFormsModule,
     PaginationModule.forRoot(),
-    RouterModule.forRoot(),
-
+    SelectDropDownModule,
+    NgSelectModule,
+    ModalModule.forRoot(),
+    
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true  },

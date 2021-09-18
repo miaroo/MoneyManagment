@@ -1,37 +1,29 @@
 <div class="text-center mt-2">
     <h1>You have {{pagination?.totalItems}} categories</h1>
+    <div class="row">
+        <div class="col-3">
+            <button class="btn btn-primary" routerLink='/addCategory'>   
+                Add New Category
+            </button>
+        </div>
+        <div class="col-8">
+          <ng-select [items]="categoriesList | async"
+           bindLabel="name"
+           autofocus
+           bindValue="id"
+           [(ngModel)]="selectedId"
+           [ngModelOptions]="{standalone: true}">
+    </ng-select>
+        </div>
+        <div class="col-1">
+            <button routerLink='/categories/{{selectedId}}' class="btn btn-primary">
+                <i class="fa fa-arrow-right"></i> </button>
+        </div>
+
+    </div>
 </div>
 
 <div class="contrainer mt-3">
-    <form #form="ngForm" class="form-inline mb-3" (ngSubmit)="loadCategories()" autocomplete="off"></form>
-    <div class="md-form active-pink active-pink-2 mb-3">
-        <input class="form-control" type="search" id="search1" aria-label="Search" mdbInput>
-        <label for="search1">Search</label>
-      </div>
-
-    <div class ="form-group">
-        <div class="btn-group float-center">
-            <button
-            type="button" 
-            class="btn btn-primary"
-            name='orderBy'
-            (click)="loadCategories()"
-            [(ngModel)]="userParams.orderBy"
-            btnRadio='alphabet'>
-                A-Z
-            </button>
-    
-            <button
-            type="button" 
-            class="btn btn-primary"
-            name='orderBy'
-            (click)="loadCategories()"
-            [(ngModel)]="userParams.orderBy"
-            btnRadio='created'>
-                Newest Categories
-            </button>
-        </div>
-    </div>
 </div>
 
 

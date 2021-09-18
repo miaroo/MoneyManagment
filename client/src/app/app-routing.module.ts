@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AccountsComponent } from './accounts/accounts.component';
 import { AnalizeComponent } from './analize/analize.component';
+import { CategoryAddComponent } from './category/category-add/category-add.component';
 import { CategoryDetailComponent } from './category/category-detail/category-detail.component';
 import { CategoryListComponent } from './category/category-list/category-list.component';
 import { NotFoundComponent } from './errors/not-found/not-found.component';
@@ -10,6 +11,7 @@ import { TestErrorsComponent } from './errors/test-errors/test-errors.component'
 import { HomeComponent } from './home/home.component';
 import { OperationsComponent } from './operations/operations.component';
 import { AuthGuard } from './_guards/auth.guard';
+
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
@@ -20,6 +22,7 @@ const routes: Routes = [
     children: [
       {path: 'categories', component: CategoryListComponent, canActivate: [AuthGuard]},
       {path: 'categories/:id', component: CategoryDetailComponent},
+      {path: 'addCategory', component: CategoryAddComponent},
       {path: 'accounts', component: AccountsComponent},
       {path: 'operations', component: OperationsComponent},
       {path: 'analize', component: AnalizeComponent},

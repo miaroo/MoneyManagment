@@ -4,6 +4,7 @@ import { UrlSerializer } from '@angular/router';
 import { of } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
+import { AddCategoryModel } from '../_models/AddCategoryModel';
 import { Category } from '../_models/CategoryModel';
 import { User } from '../_models/User';
 import { UserParams } from '../_models/UserParams';
@@ -41,10 +42,11 @@ export class CategoryService {
   }
 
   getCategory(id: string){
+    var NumberId = Number(id);
     const category =[...this.categoriesCache.values()]
     .reduce((arr, elem) => arr.concat(elem.result), [])
-    .find((category: Category) => category.id === +id);
-
+    .find((category: Category) => category.id === NumberId);
+  
     if(category) {
       return of(category);
     }
@@ -65,6 +67,31 @@ export class CategoryService {
 
     return response;
     }))
+    }
+
+    addCategory(addCategoryModel: AddCategoryModel) {
+      return this.http.post<Category>(this.baseUrl + 'category', addCategoryModel);
+    }
+
+    getCategoryList() {
+      return this.http.get<Category[]>(this.baseUrl + 'category');
+    }
+
+    UpdateCategory(category: Category) {
+      return this.http.put<Category>(this.baseUrl + 'category/categoryId', category).pipe(
+        map( () => {
+          const index = this.categories.indexOf(category);
+          this.categories[index] = category;
+        })
+      )
+    }
+
+    deleteCategory(categoryId: number) {
+      return this.http.delete(this.baseUrl + 'category/deleteCategoryId=' + categoryId).pipe(
+        map( () => {
+
+        })
+      )
     }
 
 }

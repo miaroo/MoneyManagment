@@ -47,17 +47,22 @@ namespace API.Controllers
             await _categoryRepository.AddCategoryAsync(newCategory);
             return Ok(newCategory.Id);
         }
-        [HttpPut("categoryId={categoryId}")]
-        public async Task<ActionResult<CategoryDto>> UpdateCategory(UpdateCategoryDto updateCategoryDto, int categoryId)
+        [HttpPut("categoryId")]
+        public async Task<ActionResult<CategoryDto>> UpdateCategory(CategoryDto categoryDto)
         {
             var userId = User.GetUserId();
-            var categoryToUpdate = await _categoryRepository.GetCategoryAsync(categoryId);
-            if (categoryToUpdate.AppUserId != userId) return BadRequest("This category doesnt belong to this user");
-            categoryToUpdate.Name = updateCategoryDto.Name;
-            categoryToUpdate.ParentCategoryId = updateCategoryDto.ParentCategoryId;
-            await _categoryRepository.UpdateAsync(categoryToUpdate);
+            if (categoryDto.AppUserId != userId) return BadRequest("This category doesnt belong to this user");
+            var category = new Category
+            {
+                Id = categoryDto.Id,
+                AppUserId = userId,
+                Name = categoryDto.Name,
+                OperationTypeId = categoryDto.OperationTypeId,
+                ParentCategoryId = categoryDto.ParentCategoryId
+            };
+            await _categoryRepository.UpdateAsync(category);
 
-            return Ok(categoryToUpdate.Id);
+            return Ok(category.Id);
         }
 
         [HttpGet]
@@ -94,7 +99,7 @@ namespace API.Controllers
             var userId = User.GetUserId();
             var category = await _categoryRepository.
                 GetCategoryAndChildrenCategoriesAsync(deleteCategoryId);
-
+            if (category == null) return BadRequest("Couldnt find your category");
             var categoryToDeleteParentId = category.ParentCategoryId;
 
             if (category.AppUserId != userId) return BadRequest("This category doesnt belong to this user");
@@ -109,7 +114,8 @@ namespace API.Controllers
                 await _categoryRepository.UpdateRangeAsync(category.ChildCategories);
             }
 
-            return Ok($"Category number:{deleteCategoryId} has been removed");
+            //return Ok($"Category number: {deleteCategoryId} has been removed");
+            return Ok(deleteCategoryId);
         }
     }
 }
