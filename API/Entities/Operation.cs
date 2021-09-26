@@ -12,7 +12,7 @@ namespace API.Entities
         
         public decimal Amount { get; set; }
 
-        public DateTime Date { get; set; } = DateTime.Now;
+        public DateTime Date { get; set; }
 
         [Required]
         [MaxLength(100)]

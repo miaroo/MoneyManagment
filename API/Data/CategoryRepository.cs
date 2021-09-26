@@ -16,7 +16,6 @@ namespace API.Data
     {
         private readonly DataContext _context;
         private readonly IMapper _mapper;
-
         public CategoryRepository(DataContext context, IMapper mapper)
         {
             _context = context;
@@ -41,7 +40,6 @@ namespace API.Data
                 .Where(b => b.AppUserId == AppUserId)
                 .ToListAsync();
         }
-        
 
         public async Task<Category> GetCategoryAsync(int CategoryId)
         {
@@ -54,7 +52,6 @@ namespace API.Data
             return await _context.Categories
                     .Include(c => c.ChildCategories)
                     .SingleOrDefaultAsync(x => x.Id == categoryId);
-
         }
 
         public async Task UpdateRangeAsync(IEnumerable<Category> childrenList)
@@ -67,24 +64,21 @@ namespace API.Data
         {
             _context.Categories.Update(category);
             await _context.SaveChangesAsync();
-
         }
 
-        public async Task<PagedList<CategoryDto>> GetPaginatedCategories(UserParams userParams, int AppUserId)
+        public async Task<PagedList<CategoryDto>> GetPaginatedCategoriesAsync(UserParams userParams, int appUserId)
         {
-            // var query = await GetCategoriesAsync(AppUserId);
             var query = _context.Categories
-                .Where(b => b.AppUserId == AppUserId)
-                .AsQueryable();
+                .Where(b => b.AppUserId == appUserId);
 
             query = userParams.OrderBy switch
             {
                 "created" => query.OrderByDescending(u => u.Id),
-                _ => query.OrderByDescending(u => u.Name)
+                _ => query.OrderBy(u => u.Name)
             };
+
             return await PagedList<CategoryDto>.CreateAsync(query.ProjectTo<CategoryDto>(_mapper.ConfigurationProvider)
             , userParams.PageNumber, userParams.PageSize);
-
         }
     }
 }

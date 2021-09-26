@@ -30,7 +30,6 @@ namespace API
     public class Startup
     {
         private readonly IConfiguration _config;
-        readonly string MyAllowSpecificOrigins = "_MyAllowSpecificOrigins";
         public Startup(IConfiguration config)
         {
             _config = config;
@@ -50,6 +49,7 @@ namespace API
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<IBankAccountRepository, BankAccountRepository>();
             services.AddAutoMapper(typeof(Startup));
             services.AddCors();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -74,11 +74,6 @@ namespace API
         {
 
             app.UseMiddleware<ExceptionMiddleware>();
-            //if (env.IsDevelopment())
-            //{
-            //    app.UseSwagger();
-            //    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1"));
-            //}
 
             app.UseHttpsRedirection();
 

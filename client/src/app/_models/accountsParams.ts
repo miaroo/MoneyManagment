@@ -1,9 +1,9 @@
 import { User } from "./User";
 
-export class UserParams {
+export class AccountParams {
     pageNumber = 1;
-    pageSize = 12;
-    orderBy = 'created';
+    pageSize = 10;
+    orderBy = 'date';
     pagination = true;
     constructor(user: User){
     }

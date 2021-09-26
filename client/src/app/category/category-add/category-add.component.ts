@@ -7,9 +7,10 @@ import { Category } from 'src/app/_models/CategoryModel';
 import { User } from 'src/app/_models/User';
 import { CategoryService } from 'src/app/_services/category.service';
 import {FormsModule} from '@angular/forms';
-import { AddCategoryModel } from 'src/app/_models/AddCategoryModel';
 import { OperationType } from 'src/app/_models/OperationTypeMode';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
+import { UserParams } from 'src/app/_models/UserParams';
+import { AddCategoryModel } from 'src/app/_models/AddCategoryModel';
 
 @Component({
   selector: 'app-category-add',
@@ -17,14 +18,14 @@ import { ControlValueAccessor, NgControl } from '@angular/forms';
   styleUrls: ['./category-add.component.css']
 })
 export class CategoryAddComponent implements OnInit {
+  addCategoryModel: AddCategoryModel;
   user: User;
   addCategoryForm: FormGroup;
   categories: Observable<Category[]>;
   validationErrors: string[] = [];
-  addCategoryModel: AddCategoryModel;
   OperationTypes: OperationType[] = [
-    {"Id": 1, "Name": "Income"},
-    {"Id": 2, "Name": "Expense"}
+    {"Id": 1, "name": "Income"},
+    {"Id": 2, "name": "Expense"}
   ]
 
   constructor(private categoryService: CategoryService, private toastr: ToastrService, private fb: FormBuilder, private router: Router) { }
@@ -36,18 +37,19 @@ export class CategoryAddComponent implements OnInit {
 
   initializeForm() {
     this.addCategoryForm = this.fb.group({
+      operationType: ['', Validators.required],
       name: ['', Validators.required],
-      ParentId: [''],
-      OperationType: ['', Validators.required],
+      parentCategoryId: [''],
 
     })
   }
 
   createCategory() {
-    this.addCategoryModel = {
-      parentCategoryId: this.addCategoryForm.value.selectedId,
-      operationTypeId: this.addCategoryForm.value.OperationType,
-      name: this.addCategoryForm.value.name
+    this.addCategoryModel = 
+    {
+      name: this.addCategoryForm.value.name,
+      parentCategoryId: this.addCategoryForm.value.parentCategoryId,
+      operationTypeId: this.addCategoryForm.value.operationType
     }
     return this.categoryService.addCategory(this.addCategoryModel).subscribe(response => {
       this.router.navigateByUrl('/categories');

@@ -32,10 +32,11 @@ import { CategoryAddComponent } from './category/category-add/category-add.compo
 import { SelectDropDownModule } from 'ngx-select-dropdown'
 import { NgSelectModule } from '@ng-select/ng-select';
 import { ModalModule } from 'ngx-bootstrap/modal';
-
-
-
-
+import { AppMaterialModule } from "./app.material-module";
+import { MatTableModule } from '@angular/material/table';
+import { MatSortModule } from '@angular/material/sort';
+import { AccountsDetailsComponent } from './accounts-details/accounts-details.component';
+import { AccountsAddComponent } from './accounts-add/accounts-add.component';
 
 @NgModule({
   declarations: [
@@ -56,6 +57,8 @@ import { ModalModule } from 'ngx-bootstrap/modal';
     ServerErrorComponent,
     TextInputComponent,
     CategoryAddComponent,
+    AccountsDetailsComponent,
+    AccountsAddComponent,
     
   ],
   imports: [
@@ -70,12 +73,20 @@ import { ModalModule } from 'ngx-bootstrap/modal';
     SelectDropDownModule,
     NgSelectModule,
     ModalModule.forRoot(),
-    
+    AppMaterialModule,
+    MatTableModule,
+    MatSortModule
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true  },
     {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},
   ],
+  exports: [
+    MatTableModule,
+    MatSortModule
+  ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule { 
+  MatTableModule
+}

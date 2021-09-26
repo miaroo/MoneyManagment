@@ -62,7 +62,8 @@ export class CategoryService {
     }
     let params = getPaginationHeaders(userParams.pageNumber, userParams.pageSize);
     params = params.append('orderBy', userParams.orderBy);
-    return getPaginatedResult<Category[]>(this.baseUrl + 'category/pagination', params, this.http).pipe(map(response => {
+    params = params.append('pagination', userParams.pagination);
+    return getPaginatedResult<Category[]>(this.baseUrl + 'category', params, this.http).pipe(map(response => {
     this.categoriesCache.set(Object.values(userParams).join('-'), response);
 
     return response;
@@ -78,7 +79,7 @@ export class CategoryService {
     }
 
     UpdateCategory(category: Category) {
-      return this.http.put<Category>(this.baseUrl + 'category/categoryId', category).pipe(
+      return this.http.put<Category>(this.baseUrl + 'category', category).pipe(
         map( () => {
           const index = this.categories.indexOf(category);
           this.categories[index] = category;
@@ -88,7 +89,7 @@ export class CategoryService {
 
     deleteCategory(categoryId: number) {
       return this.http.delete(this.baseUrl + 'category/deleteCategoryId=' + categoryId).pipe(
-        map( () => {
+        map(() => {
 
         })
       )

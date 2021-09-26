@@ -21,33 +21,27 @@ namespace API.Controllers
     public class CategoryController : BaseApiController
     {
         private readonly ICategoryRepository _categoryRepository;
-        private readonly IMapper _mapper;
-        private readonly IUserRepository _userRepository;
 
-        public CategoryController(ICategoryRepository categoryRepository,
-            IMapper mapper, IUserRepository userRepository)
+        public CategoryController(ICategoryRepository categoryRepository)
         {
             _categoryRepository = categoryRepository;
-            _mapper = mapper;
-            _userRepository = userRepository;
         }
 
         [HttpPost]
-        public async Task<ActionResult<CategoryDto>> CreateCategory(CategoryDto categoryDto)
+        public async Task<ActionResult<CategoryDto>> CreateCategory(CreateCategoryDto createCategoryDto)
         {
             var userId = User.GetUserId();
-
             var newCategory = new Category
             {
                 AppUserId = userId,
-                Name = categoryDto.Name,
-                OperationTypeId = categoryDto.OperationTypeId,
-                ParentCategoryId = categoryDto.ParentCategoryId
+                Name = createCategoryDto.Name,
+                OperationTypeId = createCategoryDto.OperationTypeId,
+                ParentCategoryId = createCategoryDto.ParentCategoryId
             };
             await _categoryRepository.AddCategoryAsync(newCategory);
-            return Ok(newCategory.Id);
+            return Ok();
         }
-        [HttpPut("categoryId")]
+        [HttpPut]
         public async Task<ActionResult<CategoryDto>> UpdateCategory(CategoryDto categoryDto)
         {
             var userId = User.GetUserId();
@@ -62,15 +56,7 @@ namespace API.Controllers
             };
             await _categoryRepository.UpdateAsync(category);
 
-            return Ok(category.Id);
-        }
-
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<CategoryDto>>> GetUserCategories()
-        {
-            var userId = User.GetUserId();
-            var categories = await _categoryRepository.GetCategoriesAsync(userId);
-            return Ok(categories);
+            return Ok();
         }
 
         [HttpGet("{categoryId}")]
@@ -80,13 +66,19 @@ namespace API.Controllers
             return Ok(category);
         }
 
-        [HttpGet("pagination")]
+        [HttpGet]
         public async Task<ActionResult<IEnumerable<CategoryDto>>> GetUserPaginatedCategories([FromQuery]UserParams userParams)
         {
-            //var user = await _userRepository.GetUserByUsernameAsync(User.GetUsername());
-            userParams.CurrentUserName = User.GetUsername();
-            
-            var categories = await _categoryRepository.GetPaginatedCategories(userParams, User.GetUserId());
+            var userId = User.GetUserId();
+
+            if(userParams.Pagination != true)
+            {
+                var categoriesWithoutPagination = await _categoryRepository.GetCategoriesAsync(userId);
+                return Ok(categoriesWithoutPagination);
+
+            }
+
+            var categories = await _categoryRepository.GetPaginatedCategoriesAsync(userParams, userId);
             Response.AddPaginationHeader(categories.CurrentPage, categories.PageSize,
             categories.TotalCount, categories.TotalPages);
 
@@ -114,8 +106,7 @@ namespace API.Controllers
                 await _categoryRepository.UpdateRangeAsync(category.ChildCategories);
             }
 
-            //return Ok($"Category number: {deleteCategoryId} has been removed");
-            return Ok(deleteCategoryId);
+            return Ok();
         }
     }
 }

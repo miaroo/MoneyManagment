@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { AccountsAddComponent } from './accounts-add/accounts-add.component';
 import { AccountsComponent } from './accounts/accounts.component';
 import { AnalizeComponent } from './analize/analize.component';
 import { CategoryAddComponent } from './category/category-add/category-add.component';
@@ -26,6 +27,9 @@ const routes: Routes = [
       {path: 'accounts', component: AccountsComponent},
       {path: 'operations', component: OperationsComponent},
       {path: 'analize', component: AnalizeComponent},
+      {path: 'accounts:/id', component: AccountsComponent},
+      {path: 'addAccount', component: AccountsAddComponent},
+      
     ]
   },
   {path: 'errors', component: TestErrorsComponent},

@@ -8,14 +8,14 @@
            bindLabel="name"
            autofocus
            bindValue="id"
-           formControlName = "ParentId">
+           formControlName = "parentCategoryId">
     </ng-select>
     <hr>
     <ng-select [items]="OperationTypes"
-           bindLabel="Name"
+           bindLabel="name"
            autofocus
            bindValue="Id"
-           formControlName = "OperationType">
+           formControlName = "operationType">
     </ng-select>
     <hr>
     <app-text-input [formControl]='addCategoryForm.controls["name"]' [label]='"Name"'></app-text-input>
