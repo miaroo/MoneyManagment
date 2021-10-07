@@ -5,10 +5,8 @@ using System.Threading.Tasks;
 
 namespace API.DTOs
 {
-    public class OperationDto
+    public class CreateOperationDto
     {
-        public int Id { get; set; }
-
         public string Description { get; set; }
 
         public decimal Amount { get; set; }

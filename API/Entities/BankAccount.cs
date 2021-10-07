@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 namespace API.Entities
@@ -11,6 +12,8 @@ namespace API.Entities
         [Required]
         [MaxLength(50)]
         public string Name { get; set; }
+
+        public DateTime LastActive { get; set; }
 
         public AppUser AppUser { get; set; }
 

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace API.DTOs
 {
-    public class BankAccountDto
+    public class BankAccountsWithThreeOperationsDto
     {
         public int Id { get; set; }
 
@@ -16,8 +16,6 @@ namespace API.DTOs
 
         public DateTime LastActive { get; set; }
 
-        public IEnumerable<OperationDto> Operations {get; set;}
-
-
+        public IEnumerable<OperationDto> Operations { get; set; }
     }
 }
