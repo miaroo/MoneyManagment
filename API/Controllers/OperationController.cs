@@ -25,16 +25,16 @@ namespace API.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet("{bankAccountId}")]
-        public async Task<ActionResult<IEnumerable<OperationDto>>> GetUserOperations([FromQuery] UserParams userParams, int bankAccountId)
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<OperationDto>>> GetUserOperations([FromQuery] OperationParams operationParams)
         {
-            if (userParams.Pagination != true)
+            if (operationParams.Pagination != true)
             {
-                var operationsWithoutPagination = await _operationRepository.GetOperationsAsync(bankAccountId);
+                var operationsWithoutPagination = await _operationRepository.GetOperationsAsync(operationParams.bankAccountId);
                 return Ok(_mapper.Map<IEnumerable<BankAccountDto>>(operationsWithoutPagination));
 
             }
-            var operations = await _operationRepository.GetPaginatedOperationAsync(userParams, bankAccountId);
+            var operations = await _operationRepository.GetPaginatedOperationAsync(operationParams);
             Response.AddPaginationHeader(operations.CurrentPage, operations.PageSize, operations.TotalCount, operations.TotalPages);
 
             return Ok(operations);

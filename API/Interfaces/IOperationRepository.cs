@@ -15,6 +15,6 @@ namespace API.Interfaces
         Task UpdateOperationAsync(Operation operation);
         Task<Operation> GetOperationAsync(int bankAccountId);
         Task DeleteOperationAsync(Operation operation);
-        Task<PagedList<OperationDto>> GetPaginatedOperationAsync(UserParams userParams, int appUserId);
+        Task<PagedList<OperationDto>> GetPaginatedOperationAsync(OperationParams operationParams);
     }
 }

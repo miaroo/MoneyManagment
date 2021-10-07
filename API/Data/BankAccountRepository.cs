@@ -71,14 +71,33 @@ namespace API.Data
 
         public async Task<PagedList<BankAccountDto>> GetPaginatedBankAccountsAsync(UserParams userParams, int appUserId)
         {
-            var query = _context.BankAccounts
-                .Where(b => b.AppUserId == appUserId);
+            //var query = _context.BankAccounts
+            //    .Where(b => b.AppUserId == appUserId);
 
-            query = userParams.OrderBy switch
-            {
-                "date" => query.OrderByDescending(u => u.LastActive),
-                _ => query.OrderByDescending(u => u.Name)
-            };
+            //query = userParams.OrderBy switch
+            //{
+            //    "date" => query.OrderByDescending(u => u.LastActive),
+            //    _ => query.OrderByDescending(u => u.Name)
+            //};
+            var query = _context.BankAccounts
+                .Where(b => b.AppUserId == appUserId)
+                .Select(x => new BankAccountDto
+                {
+                    Id = x.Id,
+                    AppUserId = x.AppUserId,
+                    Name = x.Name,
+                    LastActive = x.LastActive,
+                    Operations = x.Operations.Select(c => new OperationDto
+                    {
+                        Id = c.Id,
+                        Description = c.Description,
+                        Amount = c.Amount,
+                        Date = c.Date,
+                        Name = c.Name,
+                        CategoryId = c.CategoryId,
+                        BankAccountId = c.BankAccountId,
+                    }).OrderByDescending(o => o.Id).Take(3),
+                });
 
             var paginatedData = _mapper.ProjectTo<BankAccountDto>(query);
 

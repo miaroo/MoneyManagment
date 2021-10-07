@@ -48,12 +48,12 @@ namespace API.Data
                                                                           .ToListAsync();
         }
 
-        public async Task<PagedList<OperationDto>> GetPaginatedOperationAsync(UserParams userParams, int bankAccountId)
+        public async Task<PagedList<OperationDto>> GetPaginatedOperationAsync(OperationParams operationParams)
         {
-            var query = _context.Operations.Where(o => o.BankAccountId == bankAccountId);
+            var query = _context.Operations.Where(o => o.BankAccountId == operationParams.bankAccountId);
             var paginatedData = _mapper.ProjectTo<OperationDto>(query);
 
-            return await PagedList<OperationDto>.CreateAsync(paginatedData, userParams.PageNumber, userParams.PageSize);
+            return await PagedList<OperationDto>.CreateAsync(paginatedData, operationParams.PageNumber, operationParams.PageSize);
         }
 
         public async Task UpdateOperationAsync(Operation operation)
