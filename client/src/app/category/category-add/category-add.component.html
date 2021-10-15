@@ -1,0 +1,36 @@
+<form [formGroup]='addCategoryForm' (ngSubmit)="addCategoryForm.valid && createCategory()" autocomplete="off">
+    <h2 class="text-center text-primary">
+        Create Category
+    </h2>
+    <hr>
+    Pick Category:
+    <ng-select [items]="categories | async"
+           bindLabel="name"
+           
+           bindValue="id"
+           formControlName = "parentCategoryId">
+    </ng-select>
+    <hr>
+    Pick Operation Type:
+    <ng-select [items]="OperationTypes"
+           bindLabel="name"
+           
+           bindValue="Id"
+           formControlName = "operationType">
+    </ng-select>
+    <hr>
+    Name:
+    <app-text-input [formControl]='addCategoryForm.controls["name"]' [label]='"Name"'></app-text-input>
+
+    <div class="row" *ngIf="validationErrors.length > 0">
+        <ul class="text-danger">
+            <li *ngFor="let error of validationErrors">
+                {{error}}
+            </li>
+        </ul>
+    </div>
+
+    <div class="form-group text-center">
+        <button [disabled]='!addCategoryForm.valid' class="btn btn-success mr-2" type="submit">Create</button>
+    </div>
+</form>

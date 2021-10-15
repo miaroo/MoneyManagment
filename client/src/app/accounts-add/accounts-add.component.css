@@ -1,0 +1,22 @@
+input[type=text] {
+    border: none;
+    border: 1px solid blue;
+    width: 100%;
+    background: #f1f1f1;
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+ div.h1{
+     text-align: center;
+     margin: 15px;
+     margin-bottom: 50px;
+ } 
+ div.control{
+    color: rgb(241, 13, 32);
+    text-align: center;
+    margin: 15px;
+} 
+
+button{
+    width: 50%;
+}
