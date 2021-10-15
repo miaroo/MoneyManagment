@@ -38,8 +38,8 @@ namespace API.Controllers
                 OperationTypeId = createCategoryDto.OperationTypeId,
                 ParentCategoryId = createCategoryDto.ParentCategoryId
             };
-            await _categoryRepository.AddCategoryAsync(newCategory);
-            return Ok();
+            
+            return Ok(await _categoryRepository.AddCategoryAsync(newCategory));
         }
         [HttpPut]
         public async Task<ActionResult<CategoryDto>> UpdateCategory(CategoryDto categoryDto)
@@ -70,12 +70,10 @@ namespace API.Controllers
         public async Task<ActionResult<IEnumerable<CategoryDto>>> GetUserPaginatedCategories([FromQuery]UserParams userParams)
         {
             var userId = User.GetUserId();
-
-            if(userParams.Pagination != true)
+            if(!userParams.Pagination)
             {
                 var categoriesWithoutPagination = await _categoryRepository.GetCategoriesAsync(userId);
                 return Ok(categoriesWithoutPagination);
-
             }
 
             var categories = await _categoryRepository.GetPaginatedCategoriesAsync(userParams, userId);

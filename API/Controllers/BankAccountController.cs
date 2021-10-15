@@ -32,21 +32,21 @@ namespace API.Controllers
             {
                 AppUserId = userId,
                 Name = createBankAccountDto.Name,
-                LastActive = DateTime.Today
+                LastActive = DateTime.UtcNow
             };
-            await _bankAccountRepostiory.AddBankAccountAsync(newAccount);
-            return Ok();
+            
+            return Ok(await _bankAccountRepostiory.AddBankAccountAsync(newAccount));
         }
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<BankAccountDto>>> GetUserBankAccounts([FromQuery]UserParams userParams)
+        public async Task<ActionResult<IEnumerable<BankAccountDto>>> GetUserBankAccounts([FromQuery] BankAccountParams bankAccountParams)
         {
             var userId = User.GetUserId();
-            if (userParams.Pagination != true)
+            if (!bankAccountParams.Pagination)
             {
                 var accountsWithoutPagination = await _bankAccountRepostiory.GetBankAccountsAsync(userId);
                 return Ok(accountsWithoutPagination);
             }
-            var accounts = await _bankAccountRepostiory.GetPaginatedBankAccountsAsync(userParams, userId);
+            var accounts = await _bankAccountRepostiory.GetPaginatedBankAccountsAsync(bankAccountParams, userId);
             Response.AddPaginationHeader(accounts.CurrentPage, accounts.PageSize, accounts.TotalCount, accounts.TotalPages);
             return Ok(accounts);
         }
@@ -67,7 +67,7 @@ namespace API.Controllers
                 Id = bankAccountDto.Id,
                 AppUserId = bankAccountDto.AppUserId,
                 Name = bankAccountDto.Name,
-                LastActive = bankAccountDto.LastActive
+                LastActive = DateTime.UtcNow
             };
             await _bankAccountRepostiory.UpdateBankAccountAsync(account);
 

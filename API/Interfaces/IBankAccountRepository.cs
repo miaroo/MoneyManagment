@@ -10,12 +10,12 @@ namespace API.Interfaces
 {
     public interface IBankAccountRepository
     {
-        Task AddBankAccountAsync(BankAccount bankAccount);
+        Task<int> AddBankAccountAsync(BankAccount bankAccount);
         Task<IEnumerable<BankAccountDto>> GetBankAccountsAsync(int userId);
         Task UpdateBankAccountAsync(BankAccount bankAccount);
         Task<BankAccount> GetBankAccountAsync(int bankAccountId);
         Task DeleteBankAccountAsync(BankAccount bankAccount);
-        Task<PagedList<BankAccountDto>> GetPaginatedBankAccountsAsync(UserParams userParams, int appUserId);
+        Task<PagedList<BankAccountDto>> GetPaginatedBankAccountsAsync(BankAccountParams bankAccountParams, int appUserId);
         Task UpdateLastActiveAsync(int bankAccountId);
     }
 }

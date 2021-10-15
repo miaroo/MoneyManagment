@@ -15,20 +15,19 @@ namespace API.Data
     {
         private readonly DataContext _context;
         private readonly IMapper _mapper;
-        private readonly IBankAccountRepository _bankAccountRepository;
 
-        public OperationRepository(DataContext context, IMapper mapper, IBankAccountRepository bankAccountRepository)
+        public OperationRepository(DataContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
-            _bankAccountRepository = bankAccountRepository;
         }
 
-        public async Task AddOperationAsync(Operation operation)
+        public async Task<int> AddOperationAsync(Operation operation)
         {
             await _context.Operations.AddAsync(operation);
-            await SetBankAccountLastActiveAsToday(operation.BankAccountId);
             await _context.SaveChangesAsync();
+
+            return operation.Id;
         }
 
         public async Task DeleteOperationAsync(Operation operation)
@@ -59,13 +58,7 @@ namespace API.Data
         public async Task UpdateOperationAsync(Operation operation)
         {
             _context.Operations.Update(operation);
-            await SetBankAccountLastActiveAsToday(operation.BankAccountId);
             await _context.SaveChangesAsync();
-        }
-
-        public async Task SetBankAccountLastActiveAsToday(int bankAccountId)
-        {
-            await _bankAccountRepository.UpdateLastActiveAsync(bankAccountId);
         }
     }
 }

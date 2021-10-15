@@ -10,7 +10,7 @@ namespace API.Interfaces
 {
     public interface IOperationRepository
     {
-        Task AddOperationAsync(Operation operation);
+        Task<int> AddOperationAsync(Operation operation);
         Task<IEnumerable<Operation>> GetOperationsAsync(int bankAccountId);
         Task UpdateOperationAsync(Operation operation);
         Task<Operation> GetOperationAsync(int bankAccountId);

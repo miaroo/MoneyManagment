@@ -22,10 +22,12 @@ namespace API.Data
             _mapper = mapper;
         }
 
-        public async Task AddCategoryAsync(Category category)
+        public async Task<int> AddCategoryAsync(Category category)
         {
             await _context.Categories.AddAsync(category);
             await _context.SaveChangesAsync();
+
+            return category.Id;
         }
 
         public async Task DeleteCategoryAsync(Category category)

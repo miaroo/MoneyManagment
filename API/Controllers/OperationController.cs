@@ -28,11 +28,10 @@ namespace API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<OperationDto>>> GetUserOperations([FromQuery] OperationParams operationParams)
         {
-            if (operationParams.Pagination != true)
+            if (!operationParams.Pagination)
             {
                 var operationsWithoutPagination = await _operationRepository.GetOperationsAsync(operationParams.bankAccountId);
                 return Ok(_mapper.Map<IEnumerable<BankAccountDto>>(operationsWithoutPagination));
-
             }
             var operations = await _operationRepository.GetPaginatedOperationAsync(operationParams);
             Response.AddPaginationHeader(operations.CurrentPage, operations.PageSize, operations.TotalCount, operations.TotalPages);
@@ -43,7 +42,6 @@ namespace API.Controllers
         [HttpPost]
         public async Task<ActionResult<OperationDto>> CreateOperation(CreateOperationDto createOperationDto)
         {
-
             var newOperation = new Operation
             {
                  Description = createOperationDto.Description,
@@ -53,8 +51,8 @@ namespace API.Controllers
                  CategoryId = createOperationDto.CategoryId,
                  BankAccountId = createOperationDto.BankAccountId
             };
-            await _operationRepository.AddOperationAsync(newOperation);
-            return Ok();
+            
+            return Ok(await _operationRepository.AddOperationAsync(newOperation));
         }
         [HttpPut]
         public async Task<ActionResult<OperationDto>> UpdateOperation(OperationDto operationDto)

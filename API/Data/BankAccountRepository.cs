@@ -25,10 +25,12 @@ namespace API.Data
             _mapper = mapper;
         }
 
-        public async Task AddBankAccountAsync(BankAccount bankAccount)
+        public async Task<int> AddBankAccountAsync(BankAccount bankAccount)
         {
             await _context.BankAccounts.AddAsync(bankAccount);
             await _context.SaveChangesAsync();
+
+            return bankAccount.Id;
         }
 
         public async Task DeleteBankAccountAsync(BankAccount bankAccount)
@@ -45,7 +47,6 @@ namespace API.Data
 
         public async Task<IEnumerable<BankAccountDto>> GetBankAccountsAsync(int userId)
         {
-
             var query =  await _context.BankAccounts
                 .Where(b => b.AppUserId == userId)
                 .Select(x => new BankAccountDto
@@ -62,23 +63,15 @@ namespace API.Data
                     Name = c.Name,
                     CategoryId = c.CategoryId,
                     BankAccountId = c.BankAccountId,
-                 }).OrderByDescending(o => o.Id).Take(3),
+                 }).OrderByDescending(o => o.Id),
                  })
                 .ToListAsync();
 
             return query;
         }
 
-        public async Task<PagedList<BankAccountDto>> GetPaginatedBankAccountsAsync(UserParams userParams, int appUserId)
+        public async Task<PagedList<BankAccountDto>> GetPaginatedBankAccountsAsync(BankAccountParams bankAccountParams, int appUserId)
         {
-            //var query = _context.BankAccounts
-            //    .Where(b => b.AppUserId == appUserId);
-
-            //query = userParams.OrderBy switch
-            //{
-            //    "date" => query.OrderByDescending(u => u.LastActive),
-            //    _ => query.OrderByDescending(u => u.Name)
-            //};
             var query = _context.BankAccounts
                 .Where(b => b.AppUserId == appUserId)
                 .Select(x => new BankAccountDto
@@ -96,12 +89,11 @@ namespace API.Data
                         Name = c.Name,
                         CategoryId = c.CategoryId,
                         BankAccountId = c.BankAccountId,
-                    }).OrderByDescending(o => o.Id).Take(3),
+                    }).OrderByDescending(o => o.Id).Take(bankAccountParams.NumberOfRows),
                 });
-
             var paginatedData = _mapper.ProjectTo<BankAccountDto>(query);
 
-            return await PagedList<BankAccountDto>.CreateAsync(paginatedData, userParams.PageNumber, userParams.PageSize);
+            return await PagedList<BankAccountDto>.CreateAsync(paginatedData, bankAccountParams.PageNumber, bankAccountParams.PageSize);
         }
 
         public async Task UpdateBankAccountAsync(BankAccount bankAccount)
@@ -114,7 +106,7 @@ namespace API.Data
         {
             var bankAccount = await _context.BankAccounts
                 .SingleOrDefaultAsync(c => c.Id == bankAccountId);
-            bankAccount.LastActive = DateTime.Today;
+            bankAccount.LastActive = DateTime.UtcNow;
             await UpdateBankAccountAsync(bankAccount);
         }
     }
