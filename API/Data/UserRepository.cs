@@ -13,11 +13,9 @@ namespace API.Data
     public class UserRepository : IUserRepository
     {
         private readonly DataContext _context;
-        private readonly IMapper _mapper;
 
-        public UserRepository(DataContext context, IMapper mapper)
+        public UserRepository(DataContext context)
         {
-            _mapper = mapper;
             _context = context;
         }
 
@@ -28,7 +26,7 @@ namespace API.Data
 
         public async Task<AppUser> GetUserByUsernameAsync(string username)
         {
-            return await _context.Users.SingleOrDefaultAsync(u => u.Username == username);
+            return await _context.Users.SingleOrDefaultAsync(u => u.UserName == username);
         }
     }
 }

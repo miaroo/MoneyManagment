@@ -14,6 +14,10 @@ namespace API.Helpers
         {
             CreateMap<RegisterDto, AppUser>();
             CreateMap<Category, CategoryDto>();
+            CreateMap<BankAccount, BankAccountDto>();
+            CreateMap<Operation, OperationDto>();
+            CreateMap<BankAccountDto, BankAccountDto>();
+            
         }
     }
 }

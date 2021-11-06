@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace API.Interfaces
+namespace API.DTOs
 {
-    public class ISaldoRepository
+    public class CreateBankAccountDto
     {
+        public string Name { get; set; }
     }
 }

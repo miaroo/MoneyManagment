@@ -1,0 +1,53 @@
+<div class="row" *ngIf="category">
+<div class="col-4" >
+    <div class="card">
+        <div class="card-body" mx-auto>
+            <div>
+                <strong>
+                    ID : {{category.id}}
+                </strong>
+            </div>
+            <div>
+                <strong>
+                    Name : {{category.name}}
+                </strong>
+            </div>
+            <div>
+                <strong>
+                    App User ID : {{category.appUserId}}
+                </strong>
+            </div>
+            <div>
+                <strong>
+                    Parent Category Id: {{category.parentCategoryId}}
+                </strong>
+            </div>
+            <div>
+                <strong>
+                    Operation type : {{category.operationTypeId}}
+                </strong>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-12">
+    <form #editForm="ngForm" id="editForm" (ngSubmit)="updateCategory()">
+        <h1> Update Your Category
+        </h1>
+        <hr>
+        <h3>Category name</h3>
+        <textarea class="form-control" [(ngModel)]="category.name" name="name" rows="1"></textarea>
+        <h3>Parent category ID</h3>
+        <ng-select [items]="categories | async"
+           name="editForm"
+           bindLabel="name"
+           autofocus
+           bindValue="id"
+           [(ngModel)]="category.parentCategoryId"
+           >
+    </ng-select>
+    <hr>
+        <button [disabled]="!editForm.dirty" form="editForm" class="btn btn-success btn-block">Save changes</button>
+    </form>
+</div>
+</div>

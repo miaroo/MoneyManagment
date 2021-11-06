@@ -10,12 +10,14 @@ namespace API.Interfaces
 {
     public interface ICategoryRepository
     {
-        Task AddCategoryAsync(Category category);
+        Task<int> AddCategoryAsync(Category category);
         Task<IEnumerable<Category>> GetCategoriesAsync(int userId);
         Task UpdateAsync(Category category);
         Task<Category> GetCategoryAsync(int categoryId);
         Task DeleteCategoryAsync(Category category);
-        Task<Category> GetCategoryToDeleteAndChildrenCategoriesAsync(int categoryToDeleteId);
+        Task<Category> GetCategoryAndChildrenCategoriesAsync(int categoryToDeleteId);
+
+        Task<PagedList<CategoryDto>> GetPaginatedCategoriesAsync(UserParams userParams, int appUserId);
         Task UpdateRangeAsync(IEnumerable<Category> childrenList);
     }
 }

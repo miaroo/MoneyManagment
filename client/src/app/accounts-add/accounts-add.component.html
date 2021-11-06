@@ -1,0 +1,25 @@
+<div class="h1">
+    <h1>
+        Create Bank Account
+    </h1>
+</div>
+<div class="control">
+    <form [formGroup]="AddForm" (ngSubmit)="AddForm.valid && createBankAccount()"> 
+        <label for="name"><h2>Name</h2></label>
+        <input type="text" id = "name" formControlName="name" required>
+        <button class="btn btn-success" type="submit" [disabled]="!AddForm.valid">Submit</button>
+    </form>
+</div>
+<div *ngIf="name.invalid && (name.dirty || name.touched)"
+    class="alert alert-danger">
+  <div *ngIf="name.errors?.required">
+    Name is required.
+  </div>
+  <div *ngIf="name.errors?.minlength">
+    Name must be at least 4 characters long.
+  </div>
+  <div *ngIf="name.errors?.maxlength">
+    Name must be no longer that 8 characters.
+  </div>
+</div>
+

@@ -1,0 +1,50 @@
+<form [formGroup]='AddForm' (ngSubmit)="AddForm.valid && createOperation()" autocomplete="off">
+    <h2 class="text-center text-primary">
+        Create Operation
+    </h2>
+    <hr>
+    Name:
+    <app-text-input [formControl]='AddForm.controls["name"]' 
+    [label]='"name"'></app-text-input>
+    Description:
+    <app-text-input [formControl]='AddForm.controls["description"]' 
+    [label]='"description"'></app-text-input>
+
+    <mat-form-field appearance="fill">
+        <mat-label>Choose a date</mat-label>
+        <input [formControl]='AddForm.controls["date"]' matInput [matDatepicker]="picker">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+      <br>
+      Amount
+    <app-text-input [formControl]='AddForm.controls["amount"]' 
+    [label]='"amount"'></app-text-input>
+    Category:
+    <ng-select [items]="categories"
+           bindLabel="name"
+           
+           bindValue="id"
+           formControlName ='categoryId'>
+    </ng-select>
+    Bank Account:
+    <ng-select [items]="bankAccounts"
+           bindLabel="name"
+           
+           bindValue="id"
+           formControlName = "bankAccountId">
+    </ng-select>
+
+    <div class="row" *ngIf="validationErrors.length > 0">
+        <ul class="text-danger">
+            <li *ngFor="let error of validationErrors">
+                {{error}}
+            </li>
+        </ul>
+    </div>  
+   
+    <div class="form-group text-center">
+        <button [disabled]='!AddForm.valid' class="btn btn-success mr-2" type="submit">Create Operation</button>
+    </div>
+
+</form>
